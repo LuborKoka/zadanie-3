@@ -1,0 +1,29 @@
+.home {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.home div {
+  background-color: rgb(174, 67, 174);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20vw;
+  height: 10vh;
+  border-radius: 5vh;
+  margin: 5vh;
+  transition: all 0.2s;
+}
+.home div:hover {
+  background-color: rgba(174, 67, 174, 0.8);
+}
+.home a {
+  text-decoration: none;
+  color: black;
+  font-size: 2em;
+}
+
+/*# sourceMappingURL=home.css.map */
