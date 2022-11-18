@@ -2,46 +2,42 @@
   width: 100vw;
   height: 100vh;
   z-index: 1;
-  background-color: rgba(5, 5, 5, 0.2);
+  background-color: rgba(5, 5, 5, 0.9);
   position: fixed;
   top: 0;
   right: 0;
-  display: flex;
   align-items: center;
   justify-content: center;
 }
-.loader-container .loader .animation {
+.loader-container .loader {
+  width: 100px;
+  height: 100px;
   position: relative;
 }
-.loader-container .loader .animation::before {
+.loader-container .loader::before, .loader-container .loader::after {
   content: "";
   position: absolute;
-  background: none;
-  width: 100px;
-  height: 100px;
-  border: 18px solid rgb(200, 200, 200);
+  top: 0;
+  left: 0;
+  background-color: #FFF;
   border-radius: 50%;
+  width: 100%;
+  height: 100%;
+  animation: expand 1s linear infinite;
+  transform: scale(0);
 }
-.loader-container .loader .animation::after {
-  content: "";
-  position: absolute;
-  background: none;
-  width: 100px;
-  height: 100px;
-  border-top: 18px solid rgb(16, 16, 155);
-  border-bottom: 18px solid rgb(16, 16, 155);
-  border-left: 18px solid rgb(200, 200, 200);
-  border-right: 18px solid rgb(200, 200, 200);
-  border-radius: 50%;
-  animation: spin 2s linear infinite;
+.loader-container .loader::after {
+  animation-delay: 0.5s;
 }
 
-@keyframes spin {
+@keyframes expand {
   0% {
-    transform: rotate(0deg);
+    transform: scale(0);
+    opacity: 1;
   }
   100% {
-    transform: rotate(360deg);
+    transform: scale(1);
+    opacity: 0;
   }
 }
 

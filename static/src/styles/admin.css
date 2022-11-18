@@ -1,0 +1,73 @@
+.admin-wrapper {
+  width: 100vw;
+  min-height: 100vh;
+  position: relative;
+  justify-content: center;
+  padding: 5vh 5vw;
+}
+.admin-wrapper .elements-wrapper {
+  border: 2px solid navy;
+}
+
+.user-item {
+  width: 250px;
+  height: 300px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  position: relative;
+  padding: 2rem 1rem;
+  margin: 1rem 2vw;
+}
+.user-item::after, .user-item::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  transition: all 0.4s ease-in-out;
+  z-index: -1;
+}
+.user-item::after {
+  transform: scaleX(30%);
+  border-bottom: 1px solid rgb(5, 5, 5);
+  border-top: 1px solid rgb(5, 5, 5);
+}
+.user-item::before {
+  transform: scaleY(30%);
+  border-left: 1px solid rgb(5, 5, 5);
+  border-right: 1px solid rgb(5, 5, 5);
+}
+.user-item:hover::before {
+  transform: scaleY(100.5%);
+  opacity: 1;
+}
+.user-item:hover::after {
+  transform: scaleX(100.5%);
+  opacity: 1;
+}
+.user-item .center {
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10%;
+  cursor: pointer;
+}
+.user-item .center button {
+  padding: 15px 35px;
+  outline: none;
+  background-color: rgb(16, 16, 155);
+  color: white;
+  border-radius: 5px;
+  border: none;
+  transition: all 0.2s;
+}
+.user-item .center button:hover {
+  opacity: 0.8;
+}
+
+/*# sourceMappingURL=admin.css.map */

@@ -20,12 +20,11 @@ const Home: React.FC<Props> = () => {
                         <span>REGISTER</span>
                     </div>
                 </Link>
-                <Link to={'/admin'}>
+                <Link to={'/login/admin'}>
                     <div>
                         <span>ADMIN</span>
                     </div>
-                </Link>
-                
+                </Link>                
             </React.Fragment>
         </div>
     )
