@@ -1,0 +1,42 @@
+.logout {
+    width: 100%;
+    position: absolute;
+    height: 7vh;
+    top: 0;
+    right: 0;
+    box-shadow: inset 0 -10px 10px -10px rgba(23, 21, 23, .3);
+    padding-right: 3%;
+    
+    div {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        cursor: pointer;
+        float: right;
+        text-decoration: none;
+        color: rgb(23, 21, 23);
+        transition: all .2s;
+        position: relative;
+        overflow: hidden;
+        padding: 3px 6px;
+        i {
+            margin-left: 1rem;
+            font-size: 1.5em;
+        }
+        &::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 2px;
+            background-color: rgb(23, 21, 23);
+            transform: translateY(3px);
+            transition: all .2s;
+        }
+
+        &:hover::after {
+            transform: translateY(0);
+        }
+    }
+}

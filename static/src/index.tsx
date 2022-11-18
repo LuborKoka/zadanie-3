@@ -4,6 +4,7 @@ import App from './App';
 import './index.css'
 import './icons/FA/css/all.css'
 import './styles/loader.css'
+import './styles/logout.css'
 
 
 
