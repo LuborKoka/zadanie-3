@@ -31,10 +31,10 @@ server.post('/api/login', async(req, res) => {
                 response.login = true
                 response.message = 'OK'
                 response.userID = r.rows[0].id
-                response.sessionID = activeSessions[activeSessions.length - 1].sessionID + 1
+                response.sessionID = activeSessions.length == 0 ? 0 : activeSessions[activeSessions.length - 1].sessionID + 1
                 res.status(200).send(JSON.stringify(response)).end()
                 activeSessions.push({
-                    id: activeSessions[activeSessions.length - 1].sessionID + 1,
+                    id: response.sessionID,
                     userID: r.rows[0].id
                 })
                 console.log(activeSessions)
@@ -90,10 +90,10 @@ server.post('/api/register', async (req, res) => {
         response.serverError = false
         response.message = 'Success'
         response.userID = r.rows[0].id
-        response.sessionID = response.sessionID = activeSessions[activeSessions.length - 1].sessionID + 1
+        response.sessionID = activeSessions.length == 0 ? 0 : activeSessions[activeSessions.length - 1].sessionID + 1
         res.status(200).send(JSON.stringify(response)).end()
         activeSessions.push({
-            id: activeSessions[activeSessions.length - 1].sessionID + 1,
+            id: response.sessionID,
             userID: r.rows[0].id
         })
     } catch(e) {
