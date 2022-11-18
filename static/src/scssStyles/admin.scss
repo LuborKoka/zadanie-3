@@ -1,17 +1,18 @@
 .admin-wrapper {
     width: 100vw;
-    min-height: 100vh;
     position: relative;
-    justify-content: center;
-    padding: 5vh 5vw;
+    padding: 10vh 10vw;
 
-    .elements-wrapper {
-        border: 2px solid navy;
-        //width: 90%;
-        //display: inline-flex;
-        //justify-content: center;
+    .body-wrapper {
+        width: 100%;
+        padding-top: 10vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
     }
 }
+
 
 
 .user-item {
@@ -23,7 +24,7 @@
     flex-direction: column;
     position: relative;
     padding: 2rem 1rem;
-    margin: 1rem 2vw;
+    margin: 1rem 30px;
 
     &::after, &::before {
         content: '';

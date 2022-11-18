@@ -1,16 +1,19 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect,  useRef,  useState, useLayoutEffect } from "react";
 import useFetch from "../../hooks/useFetch";
-import Loader from "../Loader";
+import Loader from "../needlessUtility/Loader";
 import '../../styles/admin.css'
 import UserItem from "./UserItem";
+import Logout from "../navigation/Logout";
 
 
 
 const AdminUI: React.FC = () => {
     // eslit-disable-next-line
     const {data, loading} = useFetch('http://localhost:8080/api/admin/init')
+    const [usersCount, setUsersCount] = useState<number>(0)
     const [elements, setElements] = useState<any[]>([])
-    const div = useRef<HTMLDivElement>(null)
+    const elDiv = useRef<HTMLDivElement>(null)
+    const bdyDiv = useRef<HTMLDivElement>(null)
 
     useEffect( ()=> {
         if (data !== undefined) {
@@ -24,24 +27,32 @@ const AdminUI: React.FC = () => {
         }
     }, [data])
 
-    useEffect( ()=> {
-        const element = div.current
-        const handleResize = () => {
-            if ( element !== null ) {
-                let size  = ( element.offsetWidth % (250 + element.offsetWidth*0.04 ) ) / 2
-                element.style.padding = `5vh calc(${size}px + 4vw)`
-            }
-            
+    useEffect(()=> {
+        setUsersCount(elements.length)
+    }, [elements])
+
+    useLayoutEffect(()=> {
+        if ( elDiv.current === null || bdyDiv.current == null ) return
+
+        const e = elDiv.current
+        const b = bdyDiv.current
+
+        const resize = () => {
+            let n = usersCount
+            let mult = Math.min(n, Math.floor(b.offsetWidth / 312))
+            e.style.width = `${312*mult}px`
         }
-        window.addEventListener('resize', handleResize)
-        window.addEventListener('load', handleResize)
-        
-        return( ()=> {
-            window.removeEventListener('resize', handleResize)
-            window.removeEventListener('load', handleResize)
+
+        resize()
+
+        window.addEventListener('resize', resize)
+
+        return(()=> {
+            window.removeEventListener('resize', resize)
         })
-        // eslint-disable-next-line
-    }, [div.current])
+
+    }, [usersCount])
+
 
     if ( loading ) return <Loader />
 
@@ -52,9 +63,12 @@ const AdminUI: React.FC = () => {
 
     return(
         <React.Fragment>
-            <div className="admin-wrapper" >
-                <div className="elements-wrapper" ref={div}>
-                    {elements}
+            <div className="admin-wrapper">
+                <div className="body-wrapper" ref={bdyDiv}>
+                    <Logout />
+                    <div className="elements-wrapper" ref={elDiv}>
+                        {elements}
+                    </div>
                 </div>
             </div>
         </React.Fragment>
