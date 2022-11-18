@@ -8,6 +8,9 @@ server.use(cors())
 server.use(express.json({extended: false}))
 
 
+const activeSessions = []
+
+
 server.post('/api/login', async(req, res) => {
     const name = req.body.params.name
     const pass = req.body.params.password
@@ -16,7 +19,7 @@ server.post('/api/login', async(req, res) => {
 
     try {
         const r = await db.query(`
-            SELECT password FROM users
+            SELECT id, password FROM users
             WHERE name = $1 
         `, [name])
         if ( r.rowCount == 0 ) {
@@ -27,7 +30,14 @@ server.post('/api/login', async(req, res) => {
             if (r.rows[0].password.localeCompare(pass) == 0) {
                 response.login = true
                 response.message = 'OK'
+                response.userID = r.rows[0].id
+                response.sessionID = activeSessions[activeSessions.length - 1].sessionID + 1
                 res.status(200).send(JSON.stringify(response)).end()
+                activeSessions.push({
+                    id: activeSessions[activeSessions.length - 1].sessionID + 1,
+                    userID: r.rows[0].id
+                })
+                console.log(activeSessions)
             } else {
                 response.login = false
                 response.message = 'Incorrect password'
@@ -43,6 +53,26 @@ server.post('/api/login', async(req, res) => {
     }
 })
 
+server.delete('/api/logout', (req, res) => {
+    const sessionID = req.body.params.sessionID
+
+    const response = {}
+
+    if ( activeSessions.find( e => {return e.sessionID === sessionID}) == undefined) {
+        response.message = `Can't logout. Session doesn't exist`
+        response.serverError = true
+        response.logout = false
+        res.status(500).send(JSON.stringify(response)).end()
+    } else {
+        activeSessions = activeSessions.filter( e => {
+            return e.sessionID != sessionID
+        })
+        response.message = `Success`
+        response.serverError = false
+        response.logout = true
+        res.status(200).send(JSON.stringify(response)).end()
+    }
+})
 
 server.post('/api/register', async (req, res) => {
     const name = req.body.params.name
@@ -54,12 +84,18 @@ server.post('/api/register', async (req, res) => {
         const r = await db.query(`
         insert into users (name, password) 
         values ($1, $2)
+        returning id        
         `, [name, pass])
         response.register = true
         response.serverError = false
         response.message = 'Success'
-
+        response.userID = r.rows[0].id
+        response.sessionID = response.sessionID = activeSessions[activeSessions.length - 1].sessionID + 1
         res.status(200).send(JSON.stringify(response)).end()
+        activeSessions.push({
+            id: activeSessions[activeSessions.length - 1].sessionID + 1,
+            userID: r.rows[0].id
+        })
     } catch(e) {
         console.log(e)
         if ( e.constraint === 'users_name_key' ) {
@@ -81,6 +117,8 @@ server.post('/api/register', async (req, res) => {
 
 server.get('/api/admin/init', async (req, res) => {
     let response = {}
+
+    //A sak ved... preco nie?
     const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     await sleep(1000)
 
