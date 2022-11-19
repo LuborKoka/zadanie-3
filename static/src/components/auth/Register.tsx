@@ -1,7 +1,16 @@
-import React, { useRef } from 'react';
+import React, { useContext, useRef } from 'react';
 import Back from '../navigation/Back';
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
+import { context } from '../../App';
 
+interface dataTypes {
+    register: boolean,
+    serverError: boolean,
+    message: string,
+    userID?: number,
+    sessionID?: number,
+    error: any
+}
 
 const Register: React.FC = () => {
     const name = useRef<HTMLInputElement>(null)
@@ -9,6 +18,7 @@ const Register: React.FC = () => {
     const passAgain = useRef<HTMLInputElement>(null)
     const error = useRef<HTMLParagraphElement>(null)
     
+    const session = useContext(context)
 
     const handleClick = (e: React.FormEvent<EventTarget>): void => {
         e.preventDefault()
@@ -25,8 +35,12 @@ const Register: React.FC = () => {
                     password: pass.current.value
                 }
             })
-            .then( (res) => {
-
+            .then( (res: AxiosResponse) => {
+                const data: dataTypes = res.data
+                if ( data.register ) {
+                    session?.setSessionID(res.data.sessionID)
+                    session?.setUserID(res.data.userID)
+                } 
             })
         
 

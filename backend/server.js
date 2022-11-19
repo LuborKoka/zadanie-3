@@ -8,7 +8,7 @@ server.use(cors())
 server.use(express.json({extended: false}))
 
 
-const activeSessions = []
+var activeSessions = []
 
 
 server.post('/api/login', async(req, res) => {
@@ -31,13 +31,16 @@ server.post('/api/login', async(req, res) => {
                 response.login = true
                 response.message = 'OK'
                 response.userID = r.rows[0].id
-                response.sessionID = activeSessions.length == 0 ? 0 : activeSessions[activeSessions.length - 1].sessionID + 1
+                console.log('len: ' + activeSessions.length)
+                if ( activeSessions.length === 0 ) 
+                    response.sessionID = 0
+                else
+                    response.sessionID = activeSessions[activeSessions.length - 1].sessionID + 1
                 res.status(200).send(JSON.stringify(response)).end()
                 activeSessions.push({
-                    id: response.sessionID,
+                    sessionID: response.sessionID,
                     userID: r.rows[0].id
                 })
-                console.log(activeSessions)
             } else {
                 response.login = false
                 response.message = 'Incorrect password'
@@ -54,8 +57,7 @@ server.post('/api/login', async(req, res) => {
 })
 
 server.delete('/api/logout', (req, res) => {
-    const sessionID = req.body.params.sessionID
-
+    const sessionID = req.body.sessionID
     const response = {}
 
     if ( activeSessions.find( e => {return e.sessionID === sessionID}) == undefined) {
@@ -90,10 +92,13 @@ server.post('/api/register', async (req, res) => {
         response.serverError = false
         response.message = 'Success'
         response.userID = r.rows[0].id
-        response.sessionID = activeSessions.length == 0 ? 0 : activeSessions[activeSessions.length - 1].sessionID + 1
+        if ( activeSessions.length === 0 ) 
+            response.sessionID = 0
+        else 
+            response.sessionID = activeSessions[activeSessions.length - 1].sessionID + 1
         res.status(200).send(JSON.stringify(response)).end()
         activeSessions.push({
-            id: response.sessionID,
+            sessionID: response.sessionID,
             userID: r.rows[0].id
         })
     } catch(e) {
@@ -106,7 +111,8 @@ server.post('/api/register', async (req, res) => {
         } else {
             response.register = false
             response.serverError = true
-            response.message = e
+            response.message = 'Server error'
+            response.error = e
             res.status(500).send(JSON.stringify(response)).end()
         }
         

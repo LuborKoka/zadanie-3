@@ -1,12 +1,21 @@
-import React, { useRef } from 'react';
+import React, { useContext, useRef } from 'react';
 import Back from '../navigation/Back';
-import axios, { AxiosError } from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { context } from '../../App';
 
+interface dataTypes {
+    login: Boolean,
+    message: string,
+    userID?: number,
+    sessionID?: number,
+    error?: any
+}
 
 const Admin: React.FC = () => {
     const password = useRef<HTMLInputElement>(null)
     const navigate = useNavigate()
+    const session = useContext(context)
 
     const handleClick = (e: React.FormEvent<EventTarget>): void => {
         e.preventDefault()
@@ -22,8 +31,13 @@ const Admin: React.FC = () => {
                     password: password.current.value
                 }
             })
-            .then( (res) => {
-                if ( res.data.login ) navigate('/admin')
+            .then( (res: AxiosResponse) => {
+                const data: dataTypes = res.data
+                if ( data.login ) {
+                    session?.setSessionID(res.data.sessionID)
+                    session?.setUserID(res.data.userID)
+                    navigate('/admin')
+                }
             })
             .catch( (e: AxiosError) => {
                 if ( e.response !== undefined) {

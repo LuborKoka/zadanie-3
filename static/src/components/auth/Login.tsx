@@ -1,12 +1,22 @@
-import React, { useRef } from 'react';
+import React, { useContext, useRef } from 'react';
 import '../../styles/login.css'
 import Back from '../navigation/Back'
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
+import { context } from '../../App';
 
+interface dataTypes {
+    login: Boolean,
+    message: string,
+    userID?: number,
+    sessionID?: number,
+    error?: any
+}
 
 const Login: React.FC = () => {
     const name = useRef<HTMLInputElement>(null)
     const password = useRef<HTMLInputElement>(null)
+
+    const session = useContext(context)
 
     const handleClick = (e: React.FormEvent<EventTarget>): void => {
         e.preventDefault()
@@ -18,6 +28,13 @@ const Login: React.FC = () => {
                     params: {
                         name: name.current.value,
                         pass: password.current.value
+                    }
+                })
+                .then( (res: AxiosResponse) => {
+                    const data: dataTypes = res.data
+                    if ( data.login ) {
+                        session?.setSessionID(res.data.sessionID)
+                        session?.setUserID(res.data.userID)
                     }
                 })
         }
