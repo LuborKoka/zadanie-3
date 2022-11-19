@@ -2,11 +2,8 @@ import React from 'react'
 import { Link } from "react-router-dom"
 import '../../styles/home.css'
 
-interface Props {
 
-}
-
-const Home: React.FC<Props> = () => {
+const Home: React.FC = () => {
     return(
         <div className='home'>
             <React.Fragment>         

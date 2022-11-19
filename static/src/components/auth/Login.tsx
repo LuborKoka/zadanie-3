@@ -1,8 +1,9 @@
-import React, { useContext, useRef } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import '../../styles/login.css'
 import Back from '../navigation/Back'
-import axios, { AxiosResponse } from 'axios'
+import axios, { AxiosError, AxiosResponse } from 'axios'
 import { context } from '../../App';
+import ErrorMsg from '../needlessUtility/ErrorMsg';
 
 interface dataTypes {
     login: Boolean,
@@ -15,6 +16,9 @@ interface dataTypes {
 const Login: React.FC = () => {
     const name = useRef<HTMLInputElement>(null)
     const password = useRef<HTMLInputElement>(null)
+    
+    const [error, setError] = useState<boolean>(false)
+    const [errorTxt, setErrorTxt] = useState<string>('')
 
     const session = useContext(context)
 
@@ -22,7 +26,6 @@ const Login: React.FC = () => {
         e.preventDefault()
         
         if ( name.current != null && password.current != null) {
-            window.alert(name.current.value + '\n' + password.current.value)
             axios
                 .post('http://localhost:8080/api/login', {
                     params: {
@@ -37,12 +40,20 @@ const Login: React.FC = () => {
                         session?.setUserID(res.data.userID)
                     }
                 })
+                .catch( ( e: AxiosError) => {
+                    if ( e.response !== undefined ) {
+                        let data: any = e.response.data
+                        setError(true)
+                        setErrorTxt(data.message)
+                    }
+                }) 
         }
     }   
 
 
     return(
         <React.Fragment>
+            <ErrorMsg error={error} errorTxt={errorTxt} setError={setError} />
             <div className='form-wrapper'>
                 <div className='form'>
                     <Back />

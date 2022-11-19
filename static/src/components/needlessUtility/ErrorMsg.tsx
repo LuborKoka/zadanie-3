@@ -1,18 +1,24 @@
 import React from "react";
 
+//requires 2 states
+
 interface types {
-    error?: string
+    errorTxt: string,
+    error: boolean,
+    setError: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 
-const ErrorMsg: React.FC<types> = () => {
-    
+const ErrorMsg: React.FC<types> = ({ error, errorTxt, setError}) => {
+    const close = () => {
+        setError(false)
+    }
 
     return(
         <React.Fragment>
-            <div className="err-message-center">
+            <div className="err-message-center" style={error ? active : inactive}>
                 <div className="err-message">
-                    <p>incorrect password</p>
+                    <p>{errorTxt}</p>
                     <div className="icon" onClick={close}>
                         <i className="fa-regular fa-circle-xmark"></i>
                     </div>  

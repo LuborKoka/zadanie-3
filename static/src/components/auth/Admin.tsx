@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import Back from '../navigation/Back';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -14,6 +14,9 @@ interface dataTypes {
 }
 
 const Admin: React.FC = () => {
+    const [error, setError] = useState<boolean>(false)
+    const [errorTxt, setErrorTxt] = useState<string>('')
+
     const password = useRef<HTMLInputElement>(null)
     const navigate = useNavigate()
     const session = useContext(context)
@@ -43,7 +46,8 @@ const Admin: React.FC = () => {
             .catch( (e: AxiosError) => {
                 if ( e.response !== undefined) {
                     let err: any = e.response.data
-                    window.alert(err.message)
+                    setError(true)
+                    setErrorTxt(err.message)
                 }
             })
     }
@@ -51,7 +55,7 @@ const Admin: React.FC = () => {
 
     return(
         <React.Fragment>
-            <ErrorMsg />
+            <ErrorMsg error={error} errorTxt={errorTxt} setError={setError} />
             <div className='form-wrapper'>
                 <div className='form'>
                     <Back />

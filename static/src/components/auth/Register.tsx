@@ -1,7 +1,8 @@
-import React, { useContext, useRef } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import Back from '../navigation/Back';
-import axios, { AxiosResponse } from 'axios'
+import axios, { AxiosError, AxiosResponse } from 'axios'
 import { context } from '../../App';
+import ErrorMsg from '../needlessUtility/ErrorMsg';
 
 interface dataTypes {
     register: boolean,
@@ -16,7 +17,10 @@ const Register: React.FC = () => {
     const name = useRef<HTMLInputElement>(null)
     const pass = useRef<HTMLInputElement>(null)
     const passAgain = useRef<HTMLInputElement>(null)
-    const error = useRef<HTMLParagraphElement>(null)
+    const errorInput = useRef<HTMLParagraphElement>(null)
+
+    const [error, setError] = useState<boolean>(false)
+    const [errorTxt, setErrorTxt] = useState<string>('')
     
     const session = useContext(context)
 
@@ -42,24 +46,32 @@ const Register: React.FC = () => {
                     session?.setUserID(res.data.userID)
                 } 
             })
+            .catch( (e: AxiosError) => {
+                if ( e.response !== undefined ) {
+                    let data: any = e.response.data
+                    setError(true)
+                    setErrorTxt(data.message)
+                }
+            })
         
 
     }
 
     const comparePasswords = () => {
-        if ( pass.current == null || passAgain.current == null || error.current == null ) return
+        if ( pass.current == null || passAgain.current == null || errorInput.current == null ) return
         if ( pass.current.value.localeCompare(passAgain.current.value) === 0 ) {
-            error.current.style.display = 'none'
+            errorInput.current.style.display = 'none'
         } else {
-            if ( passAgain.current.value === '') error.current.style.display = 'none'
+            if ( passAgain.current.value === '') errorInput.current.style.display = 'none'
             else 
-                error.current.style.display = 'initial'
+                errorInput.current.style.display = 'initial'
         }  
     }
 
 
     return(
         <React.Fragment>
+            <ErrorMsg error={error} setError={setError} errorTxt={errorTxt} />
             <div className='form-wrapper'>
                 <div className='form'>
                     <Back />
@@ -78,7 +90,7 @@ const Register: React.FC = () => {
                             <label htmlFor='passwordAgain'><span>Password Again</span></label>
                         </div>
                         <div style={style}>
-                            <p ref={error} style={{display: 'none'}}>*Password doesn't match</p>
+                            <p ref={errorInput} style={{display: 'none'}}>*Password doesn't match</p>
                         </div>          
                         <div className='center'>
                             <button onClick={handleClick}>REGISTER</button>
