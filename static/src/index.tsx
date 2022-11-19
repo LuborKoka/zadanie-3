@@ -5,6 +5,7 @@ import './index.css'
 import './icons/FA/css/all.css'
 import './styles/loader.css'
 import './styles/logout.css'
+import './styles/errorMessage.css'
 
 
 

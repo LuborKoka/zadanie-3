@@ -3,6 +3,7 @@ import Back from '../navigation/Back';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { context } from '../../App';
+import ErrorMsg from '../needlessUtility/ErrorMsg';
 
 interface dataTypes {
     login: Boolean,
@@ -50,6 +51,7 @@ const Admin: React.FC = () => {
 
     return(
         <React.Fragment>
+            <ErrorMsg />
             <div className='form-wrapper'>
                 <div className='form'>
                     <Back />

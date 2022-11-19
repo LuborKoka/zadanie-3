@@ -1,0 +1,49 @@
+.err-message-center{
+    position: fixed;
+    width: 100vw;
+    left: 0;
+    top: 2vh;
+    display: flex;
+    justify-content: center;
+    opacity: 0;
+    transform: translateY(-150%);
+    transition: all .5s ease-in-out;
+
+    .err-message {
+        //border: 1px solid navy;
+        max-width: 450px;
+        height: 3rem;
+        border-radius: 1rem;
+        display: flex;
+        align-items: center;
+        box-shadow: 0 0 15px 1px rgba(16, 16, 155, .3);
+
+        p {
+            font-size: 18px;
+            padding-left: 1rem;
+            
+        }
+
+        .icon {
+            color: rgb(16, 16, 155);
+            transition: all 0.2s;
+            border-radius: 50%;
+            border: none;
+            margin: .5rem 1rem;
+            font-size: 22px;
+            width: 21px;
+            height: 21px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+
+            &:hover {
+                background-color: rgb(16, 16, 155);
+                color: white;
+            }
+
+        }
+    }
+
+}
