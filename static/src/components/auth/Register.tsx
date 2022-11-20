@@ -3,6 +3,7 @@ import Back from '../navigation/Back';
 import axios, { AxiosError, AxiosResponse } from 'axios'
 import { context } from '../../App';
 import useErrorMessage from '../../hooks/useErrorMessage';
+import { useNavigate } from 'react-router-dom';
 
 interface dataTypes {
     register: boolean,
@@ -18,15 +19,18 @@ const Register: React.FC = () => {
     const pass = useRef<HTMLInputElement>(null)
     const passAgain = useRef<HTMLInputElement>(null)
     const errorInput = useRef<HTMLParagraphElement>(null)
+    const email = useRef<HTMLInputElement>(null)
 
     const { setError, setErrorTxt, ErrorMessage } = useErrorMessage()
     
     const session = useContext(context)
 
+    const navigate = useNavigate()
+
     const handleClick = (e: React.FormEvent<EventTarget>): void => {
         e.preventDefault()
         
-        if ( pass.current == null || name.current == null || passAgain.current == null) return
+        if ( pass.current == null || name.current == null || passAgain.current == null || email.current == null) return
         if ( pass.current.value === '' || name.current.value === '' || passAgain.current.value === '' ) return
 
         if ( pass.current.value.localeCompare(passAgain.current.value) )  return
@@ -35,7 +39,8 @@ const Register: React.FC = () => {
             .post('http://localhost:8080/api/register', {
                 params: {
                     name: name.current.value,
-                    password: pass.current.value
+                    password: pass.current.value,
+                    email: email.current.value
                 }
             })
             .then( (res: AxiosResponse) => {
@@ -43,6 +48,7 @@ const Register: React.FC = () => {
                 if ( data.register ) {
                     session?.setSessionID(res.data.sessionID)
                     session?.setUserID(res.data.userID)
+                    navigate('/register/finish')
                 } 
             })
             .catch( (e: AxiosError) => {
@@ -88,6 +94,10 @@ const Register: React.FC = () => {
                             <input type={'password'} name='passwordAgain' autoComplete='off' required ref={passAgain} onChange={comparePasswords}></input>
                             <label htmlFor='passwordAgain'><span>Password Again</span></label>
                         </div>
+                        <div className='form-input'>
+                            <input type={'email'} name='email' autoComplete='off' required ref={email}></input>
+                            <label htmlFor='email'><span>E-mail</span></label>
+                        </div>                        
                         <div style={style}>
                             <p ref={errorInput} style={{display: 'none'}}>*Password doesn't match</p>
                         </div>          

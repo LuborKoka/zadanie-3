@@ -5,6 +5,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import Admin from "./components/auth/Admin";
 import Register from "./components/auth/Register";
 import AdminUI from "./components/adminInterface/AdminUI";
+import FinishRegistration from "./components/auth/FinishRegistration";
+import User from "./components/userUI/User";
 
 interface contextInterface {
   userID: number,
@@ -38,6 +40,8 @@ const App = () => {
             <Route path="/login/admin" element={<Admin/>} />
             <Route path="/register" element={<Register />} />
             <Route path="/admin" element={<AdminUI />} />
+            <Route path="/register/finish" element={<FinishRegistration />} />
+            <Route path="/user" element={<User />} />
           </Routes>
         </Router>
       </context.Provider>

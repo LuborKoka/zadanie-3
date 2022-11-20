@@ -8,6 +8,7 @@
     opacity: 0;
     transform: translateY(-150%);
     transition: all .5s ease-in-out;
+    z-index: 2;
 
     .err-message {
         //border: 1px solid navy;

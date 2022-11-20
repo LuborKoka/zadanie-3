@@ -20,7 +20,7 @@ server.post('/api/login', async(req, res) => {
 
     try {
         const r = await db.query(`
-            SELECT id, password FROM users
+            SELECT id, password, age FROM users
             WHERE name = $1 
         `, [name])
         if ( r.rowCount == 0 ) {
@@ -32,6 +32,7 @@ server.post('/api/login', async(req, res) => {
                 response.login = true
                 response.message = 'OK'
                 response.userID = r.rows[0].id
+                response.userAge = r.rows[0].age
                 if ( activeSessions.length === 0 ) 
                     response.sessionID = 0
                 else
@@ -79,15 +80,16 @@ server.delete('/api/logout', (req, res) => {
 server.post('/api/register', async (req, res) => {
     const name = req.body.params.name
     const pass = req.body.params.password
+    const email = req.body.params.email
 
     let response = {}
 
     try {
         const r = await db.query(`
-        insert into users (name, password) 
-        values ($1, $2)
+        insert into users (name, password, email) 
+        values ($1, $2, $3)
         returning id        
-        `, [name, pass])
+        `, [name, pass, email])
         response.register = true
         response.serverError = false
         response.message = 'Success'
@@ -119,6 +121,37 @@ server.post('/api/register', async (req, res) => {
     }
 })
 
+server.post('/api/register/finish', async(req, res) => {
+    const age = req.body.params.age
+    const height = req.body.params.height
+    const weight = req.body.params.weight
+    const id = req.body.params.id
+
+    const response = {}
+
+    try {
+        const r = await db.query(`
+            UPDATE users
+            SET 
+                age = $1,
+                height = $2,
+                weight = $3
+            WHERE id = $4
+        `, [age, height, weight, id])
+
+        response.message = 'OK'
+        response.finish = true
+
+        res.status(200).send(JSON.stringify(response)).end()
+
+    } catch ( e ) {
+        console.log(e)
+        response.message = 'Server error'
+        response.finish = false
+        res.status(500).send(JSON.stringify(response)).end()
+    }
+})
+
 
 
 server.get('/api/admin/init', async (req, res) => {
@@ -133,6 +166,7 @@ server.get('/api/admin/init', async (req, res) => {
             SELECT id, name, email, age, height, weight
             FROM users
             WHERE id > 1
+            ORDER BY name
         `)
 
         response.usersData = JSON.stringify(r.rows)
@@ -158,7 +192,7 @@ server.delete('/api/admin/delete/:id', async (req, res) => {
             WHERE id = ${id}
         `)
 
-        
+
     } catch(e) {
         console.log(e)
     }

@@ -10,7 +10,8 @@ interface dataTypes {
     message: string,
     userID?: number,
     sessionID?: number,
-    error?: any
+    error?: any,
+    age?: number
 }
 
 const Admin: React.FC = () => {

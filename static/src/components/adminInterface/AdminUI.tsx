@@ -1,4 +1,4 @@
-import React, { useEffect,  useRef,  useState, SyntheticEvent } from "react";
+import React, { useEffect,  useRef,  useState } from "react";
 import useFetch from "../../hooks/useFetch";
 import Loader from "../needlessUtility/Loader";
 import '../../styles/admin.css'

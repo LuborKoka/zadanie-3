@@ -4,13 +4,15 @@ import Back from '../navigation/Back'
 import axios, { AxiosError, AxiosResponse } from 'axios'
 import { context } from '../../App';
 import useErrorMessage from '../../hooks/useErrorMessage';
+import { useNavigate } from 'react-router-dom';
 
 interface dataTypes {
     login: Boolean,
     message: string,
     userID?: number,
     sessionID?: number,
-    error?: any
+    error?: any,
+    age: number
 }
 
 const Login: React.FC = () => {
@@ -20,6 +22,8 @@ const Login: React.FC = () => {
     const { setError, setErrorTxt, ErrorMessage } = useErrorMessage()
 
     const session = useContext(context)
+
+    const navigate = useNavigate()
 
     const handleClick = (e: React.FormEvent<EventTarget>): void => {
         e.preventDefault()
@@ -37,6 +41,11 @@ const Login: React.FC = () => {
                     if ( data.login ) {
                         session?.setSessionID(res.data.sessionID)
                         session?.setUserID(res.data.userID)
+
+                        if ( data.age == null || data.age == undefined || data.age == NaN ) 
+                            navigate('/register/finish')
+                        else 
+                            navigate('/user')
                     }
                 })
                 .catch( ( e: AxiosError) => {
