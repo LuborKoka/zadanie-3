@@ -1,9 +1,9 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useRef } from 'react';
 import '../../styles/login.css'
 import Back from '../navigation/Back'
 import axios, { AxiosError, AxiosResponse } from 'axios'
 import { context } from '../../App';
-import ErrorMsg from '../needlessUtility/ErrorMsg';
+import useErrorMessage from '../../hooks/useErrorMessage';
 
 interface dataTypes {
     login: Boolean,
@@ -16,9 +16,8 @@ interface dataTypes {
 const Login: React.FC = () => {
     const name = useRef<HTMLInputElement>(null)
     const password = useRef<HTMLInputElement>(null)
-    
-    const [error, setError] = useState<boolean>(false)
-    const [errorTxt, setErrorTxt] = useState<string>('')
+
+    const { setError, setErrorTxt, ErrorMessage } = useErrorMessage()
 
     const session = useContext(context)
 
@@ -53,7 +52,7 @@ const Login: React.FC = () => {
 
     return(
         <React.Fragment>
-            <ErrorMsg error={error} errorTxt={errorTxt} setError={setError} />
+            { ErrorMessage }
             <div className='form-wrapper'>
                 <div className='form'>
                     <Back />

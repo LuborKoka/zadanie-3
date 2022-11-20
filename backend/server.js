@@ -31,7 +31,6 @@ server.post('/api/login', async(req, res) => {
                 response.login = true
                 response.message = 'OK'
                 response.userID = r.rows[0].id
-                console.log('len: ' + activeSessions.length)
                 if ( activeSessions.length === 0 ) 
                     response.sessionID = 0
                 else
