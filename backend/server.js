@@ -130,7 +130,7 @@ server.get('/api/admin/init', async (req, res) => {
 
     try {
         const r = await db.query(`
-            SELECT id, name
+            SELECT id, name, email, age, height, weight
             FROM users
             WHERE id > 1
         `)
@@ -147,11 +147,27 @@ server.get('/api/admin/init', async (req, res) => {
     }
 })
 
+server.delete('/api/admin/delete/:id', async (req, res) => {
+    const { id } = req.params
+
+
+    try {
+        const r = await db.query(`
+            DELETE
+            FROM users 
+            WHERE id = ${id}
+        `)
+
+        
+    } catch(e) {
+        console.log(e)
+    }
+})
 
 server.get('/api/admin/export', async (req, res) => {
     try{ 
         const r = await db.query(`
-        SELECT name, password 
+        SELECT name, password, email, age, height, weight
         FROM users
         WHERE id > 1
         `)
@@ -160,7 +176,7 @@ server.get('/api/admin/export', async (req, res) => {
     const users = []
 
     r.rows.forEach(r => {
-        users.push([r.name, r.password])
+        users.push([r.name, r.password, r.email, r.age, r.height, r.weight])
     })
 
     users.forEach( (e, index) => {
