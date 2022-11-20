@@ -8,8 +8,6 @@ import Logout from "../navigation/Logout";
 interface contextTypes {
     userID: number,
     sessionID: number,
-    setUserID: React.Dispatch<React.SetStateAction<number>>,
-    setSessionID: React.Dispatch<React.SetStateAction<number>>
   }
 
   interface dataType {

@@ -15,13 +15,18 @@ interface dataTypes {
     age: number
 }
 
+interface sessionType {
+    userID: number,
+    sessionID: number
+}
+
 const Login: React.FC = () => {
     const name = useRef<HTMLInputElement>(null)
     const password = useRef<HTMLInputElement>(null)
 
     const { setError, setErrorTxt, ErrorMessage } = useErrorMessage()
 
-    const session = useContext(context)
+    const session: sessionType | null = useContext(context)
 
     const navigate = useNavigate()
 
@@ -38,9 +43,9 @@ const Login: React.FC = () => {
                 })
                 .then( (res: AxiosResponse) => {
                     const data: dataTypes = res.data
-                    if ( data.login ) {
-                        session?.setSessionID(res.data.sessionID)
-                        session?.setUserID(res.data.userID)
+                    if ( data.login && session != null ) {
+                        session.sessionID = res.data.sessionID
+                        session.userID = res.data.userID
 
                         if ( data.age == null || data.age == undefined || data.age == NaN ) 
                             navigate('/register/finish')

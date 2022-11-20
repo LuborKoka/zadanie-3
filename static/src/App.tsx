@@ -1,4 +1,4 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useRef, useState } from "react";
 import Home from "./components/navigation/Home";
 import Login from "./components/auth/Login";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
@@ -11,22 +11,20 @@ import User from "./components/userUI/User";
 interface contextInterface {
   userID: number,
   sessionID: number,
-  setUserID: React.Dispatch<React.SetStateAction<number>>,
-  setSessionID: React.Dispatch<React.SetStateAction<number>>
+
 }
 
 export const context = createContext<contextInterface | null>(null)
 
 const App = () => {
 
-  const [userID, setUserID] = useState<number>(-1)
-  const [sessionID, setSessionID] = useState<number>(-1)
+  //will cause errors on logout after page refresh.. can be resolved by using local storage i guess
+  const userID = useRef<number>(-1)
+  const sessionID = useRef<number>(-1)
 
   const sessionData: contextInterface = {
-    userID: userID,
-    sessionID: sessionID,
-    setUserID: setUserID,
-    setSessionID: setSessionID
+    userID: userID.current,
+    sessionID: sessionID.current
   }
 
 

@@ -14,12 +14,17 @@ interface dataTypes {
     age?: number
 }
 
+interface contextType {
+    sessionID: number,
+    userID: number
+}
+
 const Admin: React.FC = () => {
     const { setError, setErrorTxt, ErrorMessage } = useErrorMessage()
 
     const password = useRef<HTMLInputElement>(null)
     const navigate = useNavigate()
-    const session = useContext(context)
+    const session: contextType | null = useContext(context)
 
     const handleClick = (e: React.FormEvent<EventTarget>): void => {
         e.preventDefault()
@@ -37,9 +42,9 @@ const Admin: React.FC = () => {
             })
             .then( (res: AxiosResponse) => {
                 const data: dataTypes = res.data
-                if ( data.login ) {
-                    session?.setSessionID(res.data.sessionID)
-                    session?.setUserID(res.data.userID)
+                if ( data.login && session != null ) {
+                    session.sessionID = res.data.sessionID
+                    session.userID = res.data.userID
                     navigate('/admin')
                 }
             })

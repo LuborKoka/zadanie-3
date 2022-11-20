@@ -45,9 +45,9 @@ const Register: React.FC = () => {
             })
             .then( (res: AxiosResponse) => {
                 const data: dataTypes = res.data
-                if ( data.register ) {
-                    session?.setSessionID(res.data.sessionID)
-                    session?.setUserID(res.data.userID)
+                if ( data.register && session != null ) {
+                    session.sessionID = res.data.sessionID
+                    session.userID = res.data.userID
                     navigate('/register/finish')
                 } 
             })
