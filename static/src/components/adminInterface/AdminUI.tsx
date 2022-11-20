@@ -1,4 +1,4 @@
-import React, { useEffect,  useRef,  useState, useLayoutEffect } from "react";
+import React, { useEffect,  useRef,  useState, SyntheticEvent } from "react";
 import useFetch from "../../hooks/useFetch";
 import Loader from "../needlessUtility/Loader";
 import '../../styles/admin.css'
@@ -31,7 +31,7 @@ const AdminUI: React.FC = () => {
         setUsersCount(elements.length)
     }, [elements])
 
-    useLayoutEffect(()=> {
+    useEffect(()=> {
         if ( elDiv.current === null || bdyDiv.current == null ) return
 
         const e = elDiv.current
@@ -68,6 +68,13 @@ const AdminUI: React.FC = () => {
                     <Logout />
                     <div className="elements-wrapper" ref={elDiv}>
                         {elements}
+                    </div>
+
+                    <div className="export-wrapper">  
+                        <p>Export: </p>  
+                        <a href="http://localhost:8080/api/admin/export" download>
+                            <i className="fa-solid fa-file-csv"></i>
+                        </a>
                     </div>
                 </div>
             </div>

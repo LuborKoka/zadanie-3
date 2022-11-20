@@ -10,6 +10,26 @@
   align-items: center;
   justify-content: center;
   position: relative;
+  flex-direction: column;
+}
+.admin-wrapper .body-wrapper .export-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  padding: 10vh 10vw;
+}
+.admin-wrapper .body-wrapper .export-wrapper p {
+  font-size: 26px;
+  color: rgb(80, 80, 80);
+  margin-right: 1rem;
+}
+.admin-wrapper .body-wrapper .export-wrapper i {
+  color: rgb(5, 5, 5);
+  font-size: 32px;
+  transition: all 0.2s;
+}
+.admin-wrapper .body-wrapper .export-wrapper i:hover {
+  color: rgb(16, 16, 155);
 }
 
 .user-item {

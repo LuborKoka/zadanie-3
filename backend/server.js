@@ -3,6 +3,7 @@ const server = express()
 const cors = require('cors')
 const port = 8080
 const db = require('./database')
+const { application } = require('express')
 
 server.use(cors())
 server.use(express.json({extended: false}))
@@ -143,6 +144,37 @@ server.get('/api/admin/init', async (req, res) => {
         response.serverError = true
         response.message = e
         res.status(500).send(JSON.stringify(response)).end()
+    }
+})
+
+
+server.get('/api/admin/export', async (req, res) => {
+    try{ 
+        const r = await db.query(`
+        SELECT name, password 
+        FROM users
+        WHERE id > 1
+        `)
+
+    var csvData = ''
+    const users = []
+
+    r.rows.forEach(r => {
+        users.push([r.name, r.password])
+    })
+
+    users.forEach( (e, index) => {
+        let arrToString = e.join(';');
+        csvData += (index < users.length - 1) ? arrToString + '\n' : arrToString;
+      })
+
+    res.setHeader('Content-Disposition', `attachment; filename="users.csv"`)
+    res.setHeader('Content-Type', 'application/octet-stream; charset=utf-8')
+    res.setHeader('Content-Length', csvData.length)
+    res.status(200).send(csvData).end()
+    } catch (e) {
+        console.log(e)
+        res.status(500).end()
     }
 })
 
