@@ -14,6 +14,7 @@ interface dataTypes {
     error: any
 }
 
+
 const Register: React.FC = () => {
     const name = useRef<HTMLInputElement>(null)
     const pass = useRef<HTMLInputElement>(null)
@@ -31,7 +32,7 @@ const Register: React.FC = () => {
         e.preventDefault()
         
         if ( pass.current == null || name.current == null || passAgain.current == null || email.current == null) return
-        if ( pass.current.value === '' || name.current.value === '' || passAgain.current.value === '' ) return
+        if ( pass.current.value === '' || name.current.value === '' || passAgain.current.value === '' || email.current.value === '' ) return
 
         if ( pass.current.value.localeCompare(passAgain.current.value) )  return
 

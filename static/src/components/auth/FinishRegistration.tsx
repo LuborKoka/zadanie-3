@@ -1,5 +1,6 @@
-import axios, { AxiosError } from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import React, { useContext, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { context } from "../../App";
 import useErrorMessage from "../../hooks/useErrorMessage";
 import Logout from "../navigation/Logout";
@@ -20,6 +21,8 @@ const FinishRegistration: React.FC = () => {
     const height = useRef<HTMLInputElement | null>(null)
     const weight = useRef<HTMLInputElement | null>(null)
 
+    const navigate = useNavigate()
+
     const session: contextTypes | null = useContext(context)
 
     const { setError, setErrorTxt, ErrorMessage } = useErrorMessage()
@@ -37,6 +40,10 @@ const FinishRegistration: React.FC = () => {
                     weight: weight.current.value,
                     id: session?.userID
                 }
+            })
+            .then((e: AxiosResponse) => {
+                let data: dataType = e.data
+                if ( data.finish ) navigate('/user')
             })
             .catch( ( e: AxiosError ) => {
                 const data: any = e.response?.data
