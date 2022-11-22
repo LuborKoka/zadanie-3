@@ -1,4 +1,4 @@
-import React, { useEffect,  useRef,  useState } from "react";
+import React, { ReactFragment, useEffect,  useRef,  useState } from "react";
 import useFetch from "../../hooks/useFetch";
 import Loader from "../needlessUtility/Loader";
 import '../../styles/admin.css'
@@ -21,7 +21,8 @@ const AdminUI: React.FC = () => {
 
             setElements(
                 Object.entries(d).map( ( e: any ) => {
-                    return <UserItem name={e[1].name} key={e[1].id} email={e[1].email} age={e[1].age} height={e[1].height} weight={e[1].weight}/>
+                    return <UserItem name={e[1].name} key={e[1].id} email={e[1].email} age={e[1].age}
+                    height={e[1].height} weight={e[1].weight} id={e[1].id} />
                 })
             )
         }

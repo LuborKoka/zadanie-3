@@ -3,7 +3,6 @@ const server = express()
 const cors = require('cors')
 const port = 8080
 const db = require('./database')
-const { application } = require('express')
 
 server.use(cors())
 server.use(express.json({extended: false}))
@@ -190,11 +189,12 @@ server.delete('/api/admin/delete/:id', async (req, res) => {
             DELETE
             FROM users 
             WHERE id = ${id}
-        `)
-
+        `)        
+        res.status(200).send({'message': 'Success'}).end()
 
     } catch(e) {
         console.log(e)
+        res.status(500).send(JSON.stringify({message: 'error', error: e})).end()
     }
 })
 
