@@ -27,11 +27,11 @@ server.post('/api/login', async(req, res) => {
             response.message = 'Username not found'
             res.status(404).send(JSON.stringify(response)).end()
         } else {
-            if (r.rows[0].password.localeCompare(pass) == 0) {
+            if (r.rows[0].password.localeCompare(pass) === 0) {
                 response.login = true
                 response.message = 'OK'
                 response.userID = r.rows[0].id
-                response.userAge = r.rows[0].age
+                response.age = r.rows[0].age
                 if ( activeSessions.length === 0 ) 
                     response.sessionID = 0
                 else

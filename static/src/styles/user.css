@@ -1,0 +1,24 @@
+.add-container {
+  width: 200px;
+  height: 200px;
+  position: fixed;
+  z-index: 2;
+  right: 5vw;
+  top: 30vh;
+  padding: 10% 10%;
+  box-shadow: 0 0 15px 2px rgba(16, 16, 155, 0.3);
+  transform: translateX(150%);
+  transition: transform 0.4s ease-in;
+}
+
+.active {
+  transform: translateX(0);
+}
+
+.user-container {
+  position: relative;
+  margin: 10vh 10vw;
+  width: 80vw;
+}
+
+/*# sourceMappingURL=user.css.map */

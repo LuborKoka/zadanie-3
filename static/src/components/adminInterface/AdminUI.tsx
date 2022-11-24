@@ -1,9 +1,10 @@
-import React, { ReactFragment, useEffect,  useRef,  useState } from "react";
+import React, { useEffect,  useRef,  useState } from "react";
 import useFetch from "../../hooks/useFetch";
 import Loader from "../needlessUtility/Loader";
 import '../../styles/admin.css'
 import UserItem from "./UserItem";
 import Logout from "../navigation/Logout";
+import useErrorMessage from "../../hooks/useErrorMessage";
 
 
 
@@ -15,6 +16,8 @@ const AdminUI: React.FC = () => {
     const elDiv = useRef<HTMLDivElement>(null)
     const bdyDiv = useRef<HTMLDivElement>(null)
 
+    const { setError, setErrorTxt, ErrorMessage } = useErrorMessage()
+
     useEffect( ()=> {
         if (data !== undefined) {
             let d = JSON.parse(data.usersData)
@@ -22,11 +25,11 @@ const AdminUI: React.FC = () => {
             setElements(
                 Object.entries(d).map( ( e: any ) => {
                     return <UserItem name={e[1].name} key={e[1].id} email={e[1].email} age={e[1].age}
-                    height={e[1].height} weight={e[1].weight} id={e[1].id} />
+                    height={e[1].height} weight={e[1].weight} id={e[1].id} setError={setError} setErrorTxt={setErrorTxt}/>
                 })
             )
         }
-    }, [data])
+    }, [data, setError, setErrorTxt])
 
     useEffect(()=> {
         setUsersCount(elements.length)
@@ -64,6 +67,7 @@ const AdminUI: React.FC = () => {
 
     return(
         <React.Fragment>
+            {ErrorMessage}
             <div className="admin-wrapper">
                 <div className="body-wrapper" ref={bdyDiv}>
                     <Logout />

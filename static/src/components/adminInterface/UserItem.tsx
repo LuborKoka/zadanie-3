@@ -1,6 +1,5 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import React from "react";
-import useErrorMessage from "../../hooks/useErrorMessage";
 
 
 interface Props {
@@ -10,6 +9,8 @@ interface Props {
     height: number,
     weight: number,
     id: number,
+    setError: React.Dispatch<React.SetStateAction<boolean>>,
+    setErrorTxt: React.Dispatch<React.SetStateAction<string>>
 }
 
 interface resType {
@@ -17,8 +18,7 @@ interface resType {
     error?: any
 }
 
-const UserItem: React.FC<Props> = ({ name, email, age, height, weight, id }) => {
-    const { setError, setErrorTxt, ErrorMessage } = useErrorMessage()
+const UserItem: React.FC<Props> = ({ name, email, age, height, weight, id, setError, setErrorTxt }) => {
 
     const handleClick = (e: React.FormEvent<EventTarget>): void => {
         e.preventDefault()
@@ -41,7 +41,6 @@ const UserItem: React.FC<Props> = ({ name, email, age, height, weight, id }) => 
 
     return(
         <React.Fragment>
-            { ErrorMessage }
             <div className="user-item">
                 <h2>{name}</h2>
                 <p>E-mail:</p>

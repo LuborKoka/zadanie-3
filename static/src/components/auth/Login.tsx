@@ -38,7 +38,7 @@ const Login: React.FC = () => {
                 .post('http://localhost:8080/api/login', {
                     params: {
                         name: name.current.value,
-                        pass: password.current.value
+                        password: password.current.value
                     }
                 })
                 .then( (res: AxiosResponse) => {
@@ -46,7 +46,6 @@ const Login: React.FC = () => {
                     if ( data.login && session != null ) {
                         session.sessionID = res.data.sessionID
                         session.userID = res.data.userID
-
                         if ( data.age == null || data.age == undefined || data.age == NaN ) 
                             navigate('/register/finish')
                         else 
