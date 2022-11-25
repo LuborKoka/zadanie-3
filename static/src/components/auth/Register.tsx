@@ -1,7 +1,7 @@
 import React, { useContext, useRef } from 'react';
 import Back from '../navigation/Back';
 import axios, { AxiosError, AxiosResponse } from 'axios'
-import { context } from '../../App';
+import { context, contextInterface } from '../../App';
 import useErrorMessage from '../../hooks/useErrorMessage';
 import { useNavigate } from 'react-router-dom';
 
@@ -24,7 +24,7 @@ const Register: React.FC = () => {
 
     const { setError, setErrorTxt, ErrorMessage } = useErrorMessage()
     
-    const session = useContext(context)
+    const session: contextInterface | null = useContext(context)
 
     const navigate = useNavigate()
 
