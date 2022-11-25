@@ -93,4 +93,58 @@
   opacity: 0.8;
 }
 
+.add-settings-container {
+  position: fixed;
+  top: 40vh;
+  right: 15px;
+  box-shadow: 0 0 15px 2px rgba(16, 16, 155, 0.3);
+  width: 250px;
+  height: 350px;
+  transition: transform 0.4s;
+  transform: translateX(265px);
+  padding: 1rem 0.5rem;
+}
+.add-settings-container .expand {
+  position: absolute;
+  height: 50px;
+  width: 30px;
+  top: calc(50% - 25px);
+  left: -30px;
+  background-color: white;
+  color: rgb(16, 16, 155);
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.4s;
+  cursor: pointer;
+}
+.add-settings-container .exp-active {
+  transform: rotate(180deg);
+}
+.add-settings-container .active {
+  transform: translateX(0);
+}
+.add-settings-container .heading {
+  width: 100%;
+  text-align: center;
+}
+.add-settings-container .add-item-container {
+  display: grid;
+  width: 100%;
+  grid-template-columns: 70% 30%;
+}
+.add-settings-container .add-item-container p {
+  border: 1px solid black;
+  padding: 0.25rem 0.5rem;
+}
+.add-settings-container .add-item-container .link {
+  transition: all 0.2s;
+  cursor: pointer;
+}
+.add-settings-container .add-item-container .link:hover {
+  color: rgb(16, 16, 155);
+  text-decoration: underline;
+}
+
 /*# sourceMappingURL=admin.css.map */

@@ -228,7 +228,50 @@ server.get('/api/admin/export', async (req, res) => {
     }
 })
 
+ server.get('/api/admin/adds', async(req, res) => {
+    const response = {}
+    try {
+        const r = await db.query(`
+            SELECT *
+            FROM add
+        `)
+        response.message = 'Success'
+        response.data = r.rows
 
+        res.status(200).send(JSON.stringify(response)).end()
+
+    } catch (e) {
+        console.log(e)
+        response.message = 'Server error'
+        response.error = e
+
+        res.status(500).send(JSON.stringify(response)).end()
+    }
+ })
+
+ server.get('/api/user/add/:id', async (req, res) => {
+    const { id } = req.params
+    const response = {}
+
+    try {
+        const r = await db.query(`
+            SELECT image, link
+            FROM add 
+            WHERE id = $1
+        `, [id])
+
+        response.message = 'Success'
+        response.data = r.rows[0]
+
+        res.status(200).send(JSON.stringify(response)).end()
+    } catch( e ) {
+        console.log(e)
+
+        response.message = 'Server error'
+        response.error = e
+        res.status(500).send(JSON.stringify(response)).end()
+    }
+ })
 
 
 server.listen(port, ()=> console.log('Im running biatch'))

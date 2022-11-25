@@ -9,6 +9,49 @@
     box-shadow: 0 0 15px 2px rgba(16, 16, 155, .3);
     transform: translateX(150%);
     transition: transform .4s ease-in;
+
+    .header {
+        display: flex;
+        justify-content: flex-end;
+        width: 100%;
+        padding: .5rem 1rem;
+        position: absolute;
+        top: 0;
+        left: 0;
+        .close-add {
+            display: flex;
+            align-items: center;
+            position: relative;
+            cursor: pointer;
+            padding: 0 .25rem;
+            overflow: hidden;
+            transition: transform .2s;
+
+            p {
+                padding: .25rem 0;
+            }
+
+            i {
+                padding: .25rem 0 .25rem .5rem;
+            }
+
+            &::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 2px;
+                background-color: rgb(5, 5, 5);
+                transform: translateY(3px);
+            }
+
+            &:hover::after {
+                transform: translateY(0);
+            }
+        }
+
+    }
 }
 
 .active {
@@ -21,3 +64,5 @@
     margin: 10vh 10vw;
     width: 80vw;
 }
+
+

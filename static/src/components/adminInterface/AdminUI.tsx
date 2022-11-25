@@ -5,6 +5,7 @@ import '../../styles/admin.css'
 import UserItem from "./UserItem";
 import Logout from "../navigation/Logout";
 import useErrorMessage from "../../hooks/useErrorMessage";
+import AddSettings from "./AddSettings";
 
 
 
@@ -83,6 +84,7 @@ const AdminUI: React.FC = () => {
                     </div>
                 </div>
             </div>
+            <AddSettings />
         </React.Fragment>
     )
 }
