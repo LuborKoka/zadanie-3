@@ -15,22 +15,22 @@ const Add: React.FC = () => {
 
     
     const session: contextInterface | null = useContext(context)
-
-        //JE TO DOBUGOVANE
-        //uz to neni dobugovane
  
     const clock = useCallback((): void => {
         time.current = time.current + 1
         if ( time.current === 3 ) {
             setActive(true)
             clearInterval(timer.current)
-            axios
-                .patch(`http://localhost:8080/api/adds/inc/${session?.addID}`)
-                .catch( ( e: AxiosError ) => {
-                    console.log('Failed to increment add count')
-                } )
         } 
-    }, [time, session?.addID])
+    }, [time])
+
+    const incrAdd = ():void => {
+        axios
+            .patch(`http://localhost:8080/api/adds/inc/${session?.addID}`)
+            .catch( ( e: AxiosError ) => {
+                console.log('Failed to increment add count')
+            } )
+    }
 
     const closeAdd = (): void => {
         setActive(false)
@@ -68,7 +68,7 @@ const Add: React.FC = () => {
                         <i className="fa-solid fa-xmark"></i>
                     </div>
                 </div>
-                <a target='_blank' href={`https://${addData[0]}`} rel='noreferrer'>
+                <a target='_blank' href={`https://${addData[0]}`} rel='noreferrer' onClick={incrAdd} >
                     {/*<img width='150px' height='150px' alt='add_img' src="https://img.icons8.com/external-those-icons-lineal-color-those-icons/24/null/external-ad-marketing-and-advertising-those-icons-lineal-color-those-icons.png"/>*/}
                     {`https://${addData[0]}`}
                 </a>
