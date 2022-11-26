@@ -16,6 +16,7 @@ const AdminUI: React.FC = () => {
     const [elements, setElements] = useState<any[]>([])
     const elDiv = useRef<HTMLDivElement>(null)
     const bdyDiv = useRef<HTMLDivElement>(null)
+    const input = useRef<HTMLInputElement>(null)
 
     const { setError, setErrorTxt, ErrorMessage } = useErrorMessage()
 
@@ -59,6 +60,12 @@ const AdminUI: React.FC = () => {
     }, [usersCount])
 
 
+    const submit = (e: React.FormEvent<EventTarget>): void => {
+        e.preventDefault()
+        setErrorTxt('This shit ain\'t working')
+        setError(true)
+    }
+
     if ( loading ) return <Loader />
 
     
@@ -82,6 +89,11 @@ const AdminUI: React.FC = () => {
                             <i className="fa-solid fa-file-csv"></i>
                         </a>
                     </div>
+                    <form className="import-container">
+                        <p>Import: </p>
+                        <input type={'file'} accept=".csv" ref={input} />
+                        <button onClick={submit}>Submit</button>
+                    </form>
                 </div>
             </div>
             <AddSettings />

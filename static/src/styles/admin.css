@@ -16,7 +16,7 @@
   width: 100%;
   display: flex;
   justify-content: flex-start;
-  padding: 10vh 10vw;
+  padding: 10vh 10vw 0 10vw;
 }
 .admin-wrapper .body-wrapper .export-wrapper p {
   font-size: 26px;
@@ -30,6 +30,29 @@
 }
 .admin-wrapper .body-wrapper .export-wrapper i:hover {
   color: rgb(16, 16, 155);
+}
+.admin-wrapper .body-wrapper .import-container {
+  width: 100%;
+  display: grid;
+  padding: 10vh 10vw 0 10vw;
+}
+.admin-wrapper .body-wrapper .import-container input[type=file] {
+  padding-top: 0.35rem;
+}
+.admin-wrapper .body-wrapper .import-container button {
+  max-width: 100px;
+  outline: none;
+  background-color: rgb(16, 16, 155);
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+  border-radius: 0.2rem;
+  color: white;
+  margin-top: 0.5rem;
+  padding: 0.5rem 1rem;
+}
+.admin-wrapper .body-wrapper .import-container button:hover {
+  background-color: rgba(16, 16, 155, 0.8);
 }
 
 .user-item {
