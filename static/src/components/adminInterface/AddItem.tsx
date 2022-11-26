@@ -21,7 +21,7 @@ const AddItem: React.FC<props> = ({ id, image, link, count}) => {
         if ( adds.addID === id ) setActive(true)
         else setActive(false)
 
-    }, [adds])
+    }, [adds, id])
 
     const setAdd = ():void => {
         if ( session === null || adds === null ) return

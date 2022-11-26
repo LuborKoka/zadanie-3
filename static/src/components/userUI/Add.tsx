@@ -7,11 +7,6 @@ interface dataTypes {
     image: string
 }
 
-interface addData {
-    message: string,
-    count: number
-}
-
 const Add: React.FC = () => {
     const time = useRef<number>(0)
     const [active, setActive] = useState<boolean>(false)
@@ -35,7 +30,7 @@ const Add: React.FC = () => {
                     console.log('Failed to increment add count')
                 } )
         } 
-    }, [time])
+    }, [time, session?.addID])
 
     const closeAdd = (): void => {
         setActive(false)
