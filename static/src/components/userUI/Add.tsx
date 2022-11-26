@@ -18,7 +18,7 @@ const Add: React.FC = () => {
  
     const clock = useCallback((): void => {
         time.current = time.current + 1
-        if ( time.current === 3 ) {
+        if ( time.current === 60 ) {
             setActive(true)
             clearInterval(timer.current)
         } 
