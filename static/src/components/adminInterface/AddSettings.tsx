@@ -1,5 +1,7 @@
 import axios, { AxiosResponse } from "axios";
-import React, { useEffect, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
+import { useContext } from "react";
+import { context, contextInterface } from "../../App";
 import AddItem from "./AddItem";
 
 
@@ -10,10 +12,25 @@ interface dataTypes {
     count: number
 }
 
+export interface addTypes {
+    addID: number | undefined,
+    setAddID: React.Dispatch<React.SetStateAction<number | undefined>>
+}
+
+export const addContext = createContext<addTypes | null>(null)
+
 
 const AddSettings: React.FC = () => {
     const [active, setActive] = useState<boolean>(false)
     const [addElements, setAddElements] = useState<JSX.Element[]>([])
+
+    const session: contextInterface | null = useContext(context)
+    const [addID, setAddID] = useState<number | undefined>(session?.addID)
+
+    const adds: addTypes = {
+        addID: addID,
+        setAddID: setAddID
+    }
 
     const open = ():void => {
         setActive(!active)
@@ -34,17 +51,19 @@ const AddSettings: React.FC = () => {
     }, [])
     return(
         <React.Fragment>
-            <div className={active ? "add-settings-container active" : "add-settings-container"}>
-                <div className={active ? "expand exp-active" : "expand"} onClick={open}>
-                    <i className="fa-solid fa-chevron-left" />
+            <addContext.Provider value={adds}>
+                <div className={active ? "add-settings-container active" : "add-settings-container"}>
+                    <div className={active ? "expand exp-active" : "expand"} onClick={open}>
+                        <i className="fa-solid fa-chevron-left" />
+                    </div>
+                    <h3 className="heading">SET ADD</h3>
+                    <div className="add-item-container">
+                        <p className="table-header">Link</p>
+                        <p className="table-header">Count</p>
+                    </div>
+                    {addElements}
                 </div>
-                <h3 className="heading">SET ADD</h3>
-                <div className="add-item-container">
-                    <p>Link</p>
-                    <p>Count</p>
-                </div>
-                {addElements}
-            </div>
+            </addContext.Provider>
         </React.Fragment>
     )
 }

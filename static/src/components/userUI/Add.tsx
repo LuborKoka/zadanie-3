@@ -1,10 +1,15 @@
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { context, contextInterface } from "../../App";
 
 interface dataTypes {
     link: string,
     image: string
+}
+
+interface addData {
+    message: string,
+    count: number
 }
 
 const Add: React.FC = () => {
@@ -21,9 +26,14 @@ const Add: React.FC = () => {
  
     const clock = useCallback((): void => {
         time.current = time.current + 1
-        if ( time.current === 5 ) {
+        if ( time.current === 3 ) {
             setActive(true)
             clearInterval(timer.current)
+            axios
+                .patch(`http://localhost:8080/api/adds/inc/${session?.addID}`)
+                .catch( ( e: AxiosError ) => {
+                    console.log('Failed to increment add count')
+                } )
         } 
     }, [time])
 
@@ -46,7 +56,7 @@ const Add: React.FC = () => {
     useEffect(()=> {
         if ( session === null ) return
         axios
-            .get(`http://localhost:8080/api/user/add/${session.add}`)
+            .get(`http://localhost:8080/api/user/add/${session.addID}`)
             .then( (res: AxiosResponse) => {
                 let data: dataTypes = res.data.data
                 setAddData([data.link, data.image])
