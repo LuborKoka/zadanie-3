@@ -151,6 +151,29 @@ server.post('/api/register/finish', async(req, res) => {
     }
 })
 
+server.get('/api/user/init/:id', async (req, res) =>{
+    const response = {}
+    const { id } = req.params
+    try {
+        const r = await db.query(`
+            SELECT *
+            FROM merania
+            WHERE userID = $1
+        `, [id])
+
+        response.message = 'Success'
+        response.data = r.rows
+        
+        res.status(200).send(JSON.stringify(response)).end()
+
+    } catch (e) {
+        console.log(e)
+        response.message = 'Server error'
+        response.error = e
+        res.status(500).send(JSON.stringify(response)).end()
+    }
+})
+
 server.get('/api/user/add/:id', async (req, res) => {
     const { id } = req.params
     const response = {}
@@ -175,6 +198,32 @@ server.get('/api/user/add/:id', async (req, res) => {
     }
  })
 
+
+ server.put('/api/user/measurements', async(req, res) => {
+    const userID = req.body.params.userID
+    const type = req.body.params.type
+    const value = req.body.params.value
+    const date = req.body.params.date
+    
+    const response = {}
+
+    try {
+        const r = await db.query(`
+            INSERT INTO merania (userID, type, value, date)
+            VALUES ($1, $2, $3, $4)
+            RETURNING id
+        `, [userID, type, value, date])
+
+        response.message = 'Success'
+        response.measurementID = r.rows[0].id
+        res.status(200).send(JSON.stringify(response)).end()
+    } catch (e) {
+        console.log(e)
+        response.message = 'Server error'
+        response.error = e
+        res.status(500).send(JSON.stringify(response)).end()
+    }
+ })
  
 
 

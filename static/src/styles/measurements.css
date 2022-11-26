@@ -1,0 +1,92 @@
+.measurements-container {
+  padding-top: 10vh;
+  width: 100%;
+  position: relative;
+}
+.measurements-container nav {
+  width: 100%;
+  display: flex;
+}
+.measurements-container nav div {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+}
+.measurements-container nav div p {
+  color: rgb(16, 16, 155);
+  transition: all 0.2s;
+  position: relative;
+  padding: 0.25rem 0.5rem;
+  overflow: hidden;
+  text-align: center;
+  width: 20%;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 20px;
+}
+.measurements-container nav div p::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background-color: rgb(16, 16, 155);
+  transform: translateY(5px);
+}
+.measurements-container nav div p:hover::after {
+  transform: translateY(0);
+}
+.measurements-container .input-container {
+  width: 80%;
+  position: relative;
+  margin: 5vh 10%;
+}
+.measurements-container .input-container form {
+  margin-left: 10%;
+  width: 80%;
+  display: grid;
+  grid-template-rows: 3rem 3rem;
+}
+.measurements-container .input-container form div {
+  display: flex;
+  justify-content: space-around;
+}
+.measurements-container .input-container form div #value {
+  padding: 0.25rem 0.5rem;
+}
+.measurements-container .input-container form div input {
+  max-height: 2rem;
+}
+.measurements-container .input-container form button {
+  background-color: rgb(16, 16, 155);
+  border: none;
+  padding: 0.25rem 0.5rem;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  width: 80px;
+  border-radius: 5px;
+  align-self: center;
+  justify-self: center;
+  transition: all 0.2s;
+}
+.measurements-container .input-container form button:hover {
+  background-color: rgba(16, 16, 155, 0.8);
+}
+.measurements-container .measurements-list {
+  width: 80%;
+  margin: 5vh 10%;
+}
+.measurements-container .measurements-list .header, .measurements-container .measurements-list .list {
+  width: 60%;
+  margin-left: 20%;
+  display: grid;
+  grid-template-columns: 120px 100px 1fr;
+}
+.measurements-container .measurements-list .header h3, .measurements-container .measurements-list .header p, .measurements-container .measurements-list .list h3, .measurements-container .measurements-list .list p {
+  padding: 0.25rem 0.5rem;
+  border-bottom: 1px solid black;
+}
+
+/*# sourceMappingURL=measurements.css.map */
