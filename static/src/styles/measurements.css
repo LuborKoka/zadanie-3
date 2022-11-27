@@ -103,5 +103,24 @@
 .measurements-container .measurements-list .header div i:hover, .measurements-container .measurements-list .list div i:hover {
   color: red;
 }
+.measurements-container .e-i-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  padding: 10vh 10vw 0 10vw;
+}
+.measurements-container .e-i-wrapper p {
+  font-size: 26px;
+  color: rgb(80, 80, 80);
+  margin-right: 1rem;
+}
+.measurements-container .e-i-wrapper i {
+  color: rgb(5, 5, 5);
+  font-size: 32px;
+  transition: all 0.2s;
+}
+.measurements-container .e-i-wrapper i:hover {
+  color: rgb(16, 16, 155);
+}
 
 /*# sourceMappingURL=measurements.css.map */

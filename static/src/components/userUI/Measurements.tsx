@@ -19,7 +19,6 @@ interface dataType {
 const Measurements: React.FC = ()=> {
     const [measurements, setMeasurements] = useState<JSX.Element[]>([])
     const [element, setElement] = useState<JSX.Element>(<Input setMeasurements={setMeasurements}/>)
-    const [activeElement, setActiveElement] = useState<string>('input')
 
     const session: contextInterface | null = useContext(context)
 
@@ -66,6 +65,12 @@ const Measurements: React.FC = ()=> {
                     
                 </div>
 
+                <div className="e-i-wrapper">  
+                    <p>Export: </p>  
+                    <a href={`http://localhost:8080/api/user/export/${session?.userID}`} download>
+                        <i className="fa-solid fa-file-csv"></i>
+                    </a>
+                </div>
             </div>
         </React.Fragment>
     )

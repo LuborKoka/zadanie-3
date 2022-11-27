@@ -249,7 +249,44 @@ server.get('/api/user/add/:id', async (req, res) => {
     }
  })
 
-server.get('/api/admin/init', async (req, res) => {
+ server.get('/api/user/export/:id', async (req, res) => {
+    const { id } = req.params
+
+    const response = {}
+
+    try {
+        const r = await db.query(`
+            SELECT type, value, date
+            FROM merania
+            WHERE userID = $1
+            ORDER BY id
+        `, [id])
+        var csvData = ''
+        const lines = []
+
+        r.rows.forEach(r => {
+            lines.push([r.type, r.value, r.date])
+        })
+
+        lines.forEach( (e, index) => {
+            let arrToString = e.join(';');
+            csvData += (index < lines.length - 1) ? arrToString + '\n' : arrToString;
+        })
+
+        console.log(csvData)
+        res.setHeader('Content-Disposition', `attachment; filename="merania.csv"`)
+        res.setHeader('Content-Type', 'application/octet-stream; charset=utf-8')
+        res.setHeader('Content-Length', csvData.length)
+        res.status(200).send(csvData).end()
+    } catch(e) {
+        console.log(e)
+        
+    }
+
+
+ })
+
+ server.get('/api/admin/init', async (req, res) => {
     let response = {}
 
     //A sak ved... preco nie?
