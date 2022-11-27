@@ -12,19 +12,19 @@
   display: flex;
   justify-content: center;
 }
-.measurements-container nav div p {
+.measurements-container nav div p, .measurements-container nav div .active {
   color: rgb(16, 16, 155);
   transition: all 0.2s;
   position: relative;
   padding: 0.25rem 0.5rem;
   overflow: hidden;
   text-align: center;
-  width: 20%;
+  width: clamp(98px, 20%, 120px);
   cursor: pointer;
   font-weight: bold;
   font-size: 20px;
 }
-.measurements-container nav div p::after {
+.measurements-container nav div p::after, .measurements-container nav div .active::after {
   content: "";
   position: absolute;
   bottom: 0;
@@ -34,7 +34,7 @@
   background-color: rgb(16, 16, 155);
   transform: translateY(5px);
 }
-.measurements-container nav div p:hover::after {
+.measurements-container nav div p:hover::after, .measurements-container nav div .active:hover::after {
   transform: translateY(0);
 }
 .measurements-container .input-container {
@@ -82,11 +82,26 @@
   width: 60%;
   margin-left: 20%;
   display: grid;
-  grid-template-columns: 120px 100px 1fr;
+  grid-template-columns: 120px 100px 1fr 80px;
 }
 .measurements-container .measurements-list .header h3, .measurements-container .measurements-list .header p, .measurements-container .measurements-list .list h3, .measurements-container .measurements-list .list p {
   padding: 0.25rem 0.5rem;
   border-bottom: 1px solid black;
+}
+.measurements-container .measurements-list .header div, .measurements-container .measurements-list .list div {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  border-bottom: 1px solid black;
+}
+.measurements-container .measurements-list .header div i, .measurements-container .measurements-list .list div i {
+  align-self: center;
+  justify-self: center;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.measurements-container .measurements-list .header div i:hover, .measurements-container .measurements-list .list div i:hover {
+  color: red;
 }
 
 /*# sourceMappingURL=measurements.css.map */

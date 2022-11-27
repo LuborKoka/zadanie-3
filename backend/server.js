@@ -225,7 +225,29 @@ server.get('/api/user/add/:id', async (req, res) => {
     }
  })
  
+ server.delete('/api/user/measurement/:userID/:id', async (req, res) => {
+    const { userID } = req.params
+    const { id } = req.params
 
+    console.log(`${userID}\n${id}`)
+    const response = {}
+
+    try {
+        const r = await db.query((`
+            DELETE FROM merania
+            WHERE id = $1 AND userID = $2
+        `), [id, userID])
+
+        response.message = 'Success'
+
+        res.status(200).send(JSON.stringify(response)).end()
+    } catch(e) {
+        console.log(e)
+        response.message = 'Server error'
+        response.error = e
+        res.status(500).send(JSON.stringify(response)).end()
+    }
+ })
 
 server.get('/api/admin/init', async (req, res) => {
     let response = {}

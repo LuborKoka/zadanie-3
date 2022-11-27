@@ -9,6 +9,13 @@ interface props {
     setMeasurements: React.Dispatch<React.SetStateAction<JSX.Element[]>>
 }
 
+interface response {
+    message: string,
+    measurementID: number
+    error?: any,
+}
+
+
 
 const Input: React.FC<props> = ({ setMeasurements })=> {
     const date = useRef<HTMLInputElement>(null)
@@ -50,9 +57,10 @@ const Input: React.FC<props> = ({ setMeasurements })=> {
                 }
             })
             .then( ( res: AxiosResponse ) => {
-                if ( res.data.message === 'Success')
+                let data: response = res.data
+                if ( data.message === 'Success')
                     setMeasurements( ( prev: JSX.Element[] ) => {
-                        return [...prev, <MeasurementItem date={date.current?.value} value={value.current?.value} type={type.current?.value} key={res.data.measurementID}/>]
+                        return [...prev, <MeasurementItem date={date.current?.value} value={value.current?.value} type={type.current?.value} setter={setMeasurements} id={data.measurementID} key={data.measurementID}/>]
                     })
             })
 

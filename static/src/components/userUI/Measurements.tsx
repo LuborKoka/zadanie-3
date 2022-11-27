@@ -12,12 +12,14 @@ interface dataType {
     userID: number,
     type: string,
     date: string,
-    value: string
+    value: string,
 }
+
 
 const Measurements: React.FC = ()=> {
     const [measurements, setMeasurements] = useState<JSX.Element[]>([])
     const [element, setElement] = useState<JSX.Element>(<Input setMeasurements={setMeasurements}/>)
+    const [activeElement, setActiveElement] = useState<string>('input')
 
     const session: contextInterface | null = useContext(context)
 
@@ -29,7 +31,7 @@ const Measurements: React.FC = ()=> {
             let d: dataType[] = data.data
             d.forEach( (e: dataType) => {
                 setMeasurements( ( prev: JSX.Element[] ) => {
-                    return [...prev, <MeasurementItem date={e.date} type={e.type} value={e.value} key={e.id}/>]
+                    return [...prev, <MeasurementItem date={e.date} type={e.type} value={e.value} setter={setMeasurements} id={e.id} key={e.id}/>]
                 })
             })
         }
@@ -44,10 +46,10 @@ const Measurements: React.FC = ()=> {
             <div className="measurements-container">
                 <nav>
                     <div>
-                        <p onClick={()=>setElement(<Input setMeasurements={setMeasurements}/>)}>INPUT</p>
+                        <p onClick={ ()=>setElement(<Input setMeasurements={setMeasurements}/>)}>INPUT</p>
                     </div>
                     <div>
-                        <p onClick={()=>setElement(<Import />)}>IMPORT</p>
+                        <p onClick= {()=>setElement(<Import  />)}>IMPORT</p>
                     </div>
                 </nav>
                 {element}
@@ -56,6 +58,7 @@ const Measurements: React.FC = ()=> {
                         <h3>Date</h3>
                         <h3>Type</h3>
                         <h3>Value</h3>
+                        <div></div>
                     </div>
                     <div className="list">
                         {measurements}  
