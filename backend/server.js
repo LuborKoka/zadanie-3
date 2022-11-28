@@ -7,7 +7,6 @@ const db = require('./database')
 server.use(cors())
 server.use(express.json({extended: false}))
 
-
 var activeSessions = []
 
 
@@ -85,9 +84,9 @@ server.post('/api/register', async (req, res) => {
 
     try {
         const r = await db.query(`
-        insert into users (name, password, email) 
-        values ($1, $2, $3)
-        returning id        
+            INSERT INTO users (name, password, email) 
+            VALUES ($1, $2, $3)
+            RETURNING id        
         `, [name, pass, email])
         response.register = true
         response.serverError = false
@@ -156,9 +155,11 @@ server.get('/api/user/init/:id', async (req, res) =>{
     const { id } = req.params
     try {
         const r = await db.query(`
-            SELECT *
-            FROM merania
-            WHERE userID = $1
+            SELECT m.*, me.name
+            FROM merania AS m
+            JOIN methods AS me ON m.method_id = me.id
+            WHERE userid = $1
+            ORDER BY date
         `, [id])
 
         response.message = 'Success'
@@ -201,18 +202,21 @@ server.get('/api/user/add/:id', async (req, res) => {
 
  server.put('/api/user/measurements', async(req, res) => {
     const userID = req.body.params.userID
-    const type = req.body.params.type
-    const value = req.body.params.value
+    const weight = req.body.params.weight
     const date = req.body.params.date
+    const waist = req.body.params.waist
+    const hips = req.body.params.hips
+    const method = req.body.params.method
+
     
     const response = {}
 
     try {
         const r = await db.query(`
-            INSERT INTO merania (userID, type, value, date)
-            VALUES ($1, $2, $3, $4)
+            INSERT INTO merania (userID, weight, date, waist, hips, method)
+            VALUES ($1, $2, $3, $4, $5, $6)
             RETURNING id
-        `, [userID, type, value, date])
+        `, [userID, weight, date, waist, hips, method])
 
         response.message = 'Success'
         response.measurementID = r.rows[0].id
@@ -229,7 +233,6 @@ server.get('/api/user/add/:id', async (req, res) => {
     const { userID } = req.params
     const { id } = req.params
 
-    console.log(`${userID}\n${id}`)
     const response = {}
 
     try {
@@ -256,16 +259,17 @@ server.get('/api/user/add/:id', async (req, res) => {
 
     try {
         const r = await db.query(`
-            SELECT type, value, date
-            FROM merania
-            WHERE userID = $1
-            ORDER BY id
+            SELECT m.date, m.weight, m.waist, m.hips, me.name
+            FROM merania AS m
+            LEFT JOIN methods AS me ON m.method_id = me.id
+            WHERE userid = $1
+            ORDER BY date
         `, [id])
         var csvData = ''
         const lines = []
 
         r.rows.forEach(r => {
-            lines.push([r.type, r.value, r.date])
+            lines.push([r.date, r.weight, r.waist, r.hips, r.name])
         })
 
         lines.forEach( (e, index) => {
@@ -282,8 +286,79 @@ server.get('/api/user/add/:id', async (req, res) => {
         console.log(e)
         
     }
+ })
 
+ server.get('/api/user/init/method/:id', async (req, res) => {
+    const { id } = req.params
 
+    const response = {}
+
+    try {
+        const r = await db.query(`
+            SELECT id, name, description
+            FROM methods 
+            WHERE user_id = $1
+            ORDER BY id
+        `, [id])
+
+        response.message = 'Success'
+        response.data = r.rows
+
+        res.status(200).send(JSON.stringify(response)).end()
+
+    } catch (e) {
+        console.log(e)
+
+        res.status(500).end()
+    }
+ })
+
+ server.put('/api/user/put/method', async(req, res) => {
+    const response = {}
+    const name = req.body.params.name
+    const description = req.body.params.description
+    const userID = req.body.params.userID
+
+    try {
+        const r = await db.query(`
+            INSERT INTO methods(id, name, description, user_id)
+            SELECT max(id) + 1, $1, $2, $3
+            FROM methods
+            RETURNING id
+        `, [name, description, userID])
+
+        response.message = 'Success'
+        response.id = r.rows[0].id
+
+        res.status(200).send(JSON.stringify(response)).end()
+    } catch(e) {
+        console.log(e)
+
+        res.status(500).end()
+
+    }
+ })
+
+ server.delete('/api/user/delete/method/:id', async(req, res) => {
+    const { id } = req.params
+
+    const response = {}
+
+    try {
+        const r = await db.query(`
+            DELETE 
+            FROM methods
+            WHERE id = $1
+        `, [id])
+
+        response.message = 'Success'
+
+        res.status(200).send(JSON.stringify(response)).end()
+    } catch(e) {
+        console.log(e)
+
+        res.status(500).end()
+    }
  })
 
  server.get('/api/admin/init', async (req, res) => {
