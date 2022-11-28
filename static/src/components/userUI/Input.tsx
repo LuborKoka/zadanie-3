@@ -19,8 +19,10 @@ interface response {
 
 const Input: React.FC<props> = ({ setMeasurements })=> {
     const date = useRef<HTMLInputElement>(null)
-    const value = useRef<HTMLInputElement>(null)
-    const type = useRef<HTMLInputElement>(null)
+    const weight = useRef<HTMLInputElement>(null)
+    const method = useRef<HTMLInputElement>(null)
+    const waist = useRef<HTMLInputElement>(null)
+    const hips = useRef<HTMLInputElement>(null)
 
     const session: contextInterface | null = useContext(context)
 
@@ -31,36 +33,45 @@ const Input: React.FC<props> = ({ setMeasurements })=> {
 
         if (date.current?.value === '') {
             setError(true)
-            setErrorTxt('Unset date')
+            setErrorTxt('Date not set')
             return
         }
 
-        if ( value.current?.value === '' ) {
+        if ( weight.current?.value === '' ) {
             setError(true)
-            setErrorTxt('Unset value')
+            setErrorTxt('Weight not set')
             return
         }
 
-        if ( type.current?.value !== 'Weight' && type.current?.value !== '2nd param' && type.current?.value !== '3rd param' ) {
+        if ( waist.current?.value === '' ) {
             setError(true)
-            setErrorTxt('Invalid or unset type value')
+            setErrorTxt('Waist circumference not set')
             return
         }
-        
+
+        if ( hips.current?.value === '' ) {
+            setError(true)
+            setErrorTxt('Hips circumference not set')
+            return
+        }   
+
         axios
             .put('http://localhost:8080/api/user/measurements', {
                 params: {
                     userID: session?.userID,
-                    type: type.current.value,
+                    method: method.current?.value,
                     date: date.current?.value,
-                    value: value.current?.value
+                    weight: weight.current?.value,
+                    waist: waist.current?.value,
+                    hips: hips.current?.value
                 }
             })
             .then( ( res: AxiosResponse ) => {
                 let data: response = res.data
                 if ( data.message === 'Success')
                     setMeasurements( ( prev: JSX.Element[] ) => {
-                        return [...prev, <MeasurementItem date={date.current?.value} value={value.current?.value} type={type.current?.value} setter={setMeasurements} id={data.measurementID} key={data.measurementID}/>]
+                        return [...prev, <MeasurementItem date={date.current?.value} weight={weight.current?.value} waist={waist.current?.value}
+                        hips={hips.current?.value} method={method.current?.value}  setter={setMeasurements} id={data.measurementID} key={data.measurementID} />]
                     })
             })
 
@@ -73,9 +84,11 @@ const Input: React.FC<props> = ({ setMeasurements })=> {
             <div className="input-container">
                 <form>
                     <div className="data">
-                        <input type={'date'} ref={date}></input>
-                        <input type='text' id='value' placeholder="value" ref={value}></input>
-                        <input list='types' ref={type} />
+                        <input type='date' ref={date} />
+                        <input type='text' placeholder="Weight" ref={weight} />
+                        <input type='text' placeholder="Waist" ref={waist} />
+                        <input type='text' placeholder="Hips"  ref={hips}/>
+                        <input placeholder='Method' list='types' ref={method} />
                         <datalist id='types'>
                             <option value={'Weight'} />
                             <option value={'2nd param'} />
