@@ -4,10 +4,12 @@ import { context, contextInterface } from "../../App";
 
 interface props {
     date?: string,
-    type?: string,
-    value?: string,
+    weight?: string,
+    waist?: string,
+    hips?: string,
     setter: React.Dispatch<React.SetStateAction<JSX.Element[]>>
-    id: number
+    id: number,
+    method?: string
 }
 
 interface response {
@@ -15,7 +17,7 @@ interface response {
     error?: any
 }
 
-const MeasurementItem: React.FC<props> = ({ date, type, value, setter, id })=> {
+const MeasurementItem: React.FC<props> = ({ date, weight, waist, hips, setter, id, method })=> {
     const session: contextInterface | null = useContext(context)
 
     function deleteMeasurement():void {
@@ -38,8 +40,10 @@ const MeasurementItem: React.FC<props> = ({ date, type, value, setter, id })=> {
     return(
         <React.Fragment>
             <p>{date}</p>
-            <p>{type}</p>
-            <p>{value}</p>
+            <p>{weight}</p>
+            <p>{waist}</p>
+            <p>{hips}</p>
+            <p>{method}</p>
             <div className="delete">
                 <i className="fas fa-trash-alt" onClick={deleteMeasurement}/>
             </div>

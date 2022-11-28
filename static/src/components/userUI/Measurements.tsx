@@ -10,9 +10,11 @@ import MeasurementItem from "./MeasurementItem";
 interface dataType {
     id: number,
     userID: number,
-    type: string,
     date: string,
-    value: string,
+    weight: string,
+    waist: string,
+    hips: string,
+    name: string
 }
 
 
@@ -30,7 +32,7 @@ const Measurements: React.FC = ()=> {
             let d: dataType[] = data.data
             d.forEach( (e: dataType) => {
                 setMeasurements( ( prev: JSX.Element[] ) => {
-                    return [...prev, <MeasurementItem date={e.date} type={e.type} value={e.value} setter={setMeasurements} id={e.id} key={e.id}/>]
+                    return [...prev, <MeasurementItem date={e.date.slice(0, 10)}  weight={e.weight} waist={e.waist} hips={e.hips} method={e.name} setter={setMeasurements} id={e.id} key={e.id}/>]
                 })
             })
         }
@@ -55,8 +57,10 @@ const Measurements: React.FC = ()=> {
                 <div className="measurements-list">
                     <div className="header">
                         <h3>Date</h3>
-                        <h3>Type</h3>
-                        <h3>Value</h3>
+                        <h3>Weight</h3>
+                        <h3>Waist</h3>
+                        <h3>Hips</h3>
+                        <h3>Method</h3>
                         <div></div>
                     </div>
                     <div className="list">
