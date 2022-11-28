@@ -1,0 +1,27 @@
+.method-container {
+    position: relative;
+    padding: 5vh 10vw;
+
+    .header, .list {
+        display: grid;
+        grid-template-columns: 150px 1fr 60px;
+
+        h3, div{
+            border-bottom: 1px solid black;
+            padding: .25rem .5rem;
+
+            i {
+                cursor: pointer;
+                transition: color .2s;
+                 &:hover {
+                    color: red;
+                 }
+            }
+        }
+
+        p{
+            border-bottom: 1px solid black;
+            padding: .25rem .75rem;
+        }
+    }
+}

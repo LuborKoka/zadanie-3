@@ -58,5 +58,35 @@
   margin: 10vh 10vw;
   width: 80vw;
 }
+.user-container .user-primary-navigation {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  padding-top: 10vh;
+}
+.user-container .user-primary-navigation .link {
+  padding: 0.25rem 0.5rem;
+  color: rgb(16, 16, 155);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.user-container .user-primary-navigation .link:hover div {
+  transform: scaleX(100%);
+}
+.user-container .user-primary-navigation .link h2 {
+  padding: 0.25rem 0.5rem;
+}
+.user-container .user-primary-navigation .link div {
+  width: 100%;
+  height: 3px;
+  background-color: rgb(16, 16, 155);
+  transform-origin: 0%;
+  transform: scaleX(0);
+  transition: transform 0.2s;
+}
+.user-container .user-primary-navigation .link .active {
+  transform: scaleX(100%);
+}
 
 /*# sourceMappingURL=user.css.map */

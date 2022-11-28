@@ -1,0 +1,25 @@
+.method-container {
+  position: relative;
+  padding: 5vh 10vw;
+}
+.method-container .header, .method-container .list {
+  display: grid;
+  grid-template-columns: 150px 1fr 60px;
+}
+.method-container .header h3, .method-container .header div, .method-container .list h3, .method-container .list div {
+  border-bottom: 1px solid black;
+  padding: 0.25rem 0.5rem;
+}
+.method-container .header h3 i, .method-container .header div i, .method-container .list h3 i, .method-container .list div i {
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.method-container .header h3 i:hover, .method-container .header div i:hover, .method-container .list h3 i:hover, .method-container .list div i:hover {
+  color: red;
+}
+.method-container .header p, .method-container .list p {
+  border-bottom: 1px solid black;
+  padding: 0.25rem 0.75rem;
+}
+
+/*# sourceMappingURL=method.css.map */
