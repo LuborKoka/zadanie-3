@@ -13,7 +13,7 @@ const AdminUI: React.FC = () => {
     // eslit-disable-next-line
     const {data, loading} = useFetch('http://localhost:8080/api/admin/init')
     const [usersCount, setUsersCount] = useState<number>(0)
-    const [elements, setElements] = useState<any[]>([])
+    const [elements, setElements] = useState<JSX.Element[]>([])
     const elDiv = useRef<HTMLDivElement>(null)
     const bdyDiv = useRef<HTMLDivElement>(null)
     const input = useRef<HTMLInputElement>(null)
@@ -27,7 +27,7 @@ const AdminUI: React.FC = () => {
             setElements(
                 Object.entries(d).map( ( e: any ) => {
                     return <UserItem name={e[1].name} key={e[1].id} email={e[1].email} age={e[1].age}
-                    height={e[1].height} weight={e[1].weight} id={e[1].id} setError={setError} setErrorTxt={setErrorTxt}/>
+                    height={e[1].height} weight={e[1].weight} id={e[1].id} setError={setError} setErrorTxt={setErrorTxt} setElements={setElements}/>
                 })
             )
         }
