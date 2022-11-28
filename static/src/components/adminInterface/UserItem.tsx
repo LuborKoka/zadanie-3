@@ -10,7 +10,8 @@ interface Props {
     weight: number,
     id: number,
     setError: React.Dispatch<React.SetStateAction<boolean>>,
-    setErrorTxt: React.Dispatch<React.SetStateAction<string>>
+    setErrorTxt: React.Dispatch<React.SetStateAction<string>>,
+    setElements: React.Dispatch<React.SetStateAction<JSX.Element[]>>
 }
 
 interface resType {
@@ -18,7 +19,7 @@ interface resType {
     error?: any
 }
 
-const UserItem: React.FC<Props> = ({ name, email, age, height, weight, id, setError, setErrorTxt }) => {
+const UserItem: React.FC<Props> = ({ name, email, age, height, weight, id, setError, setErrorTxt, setElements }) => {
 
     const handleClick = (e: React.FormEvent<EventTarget>): void => {
         e.preventDefault()
@@ -30,6 +31,11 @@ const UserItem: React.FC<Props> = ({ name, email, age, height, weight, id, setEr
                 if ( data.message === 'Success' ) {
                     setError(true)
                     setErrorTxt('User successfully deleted')
+                    setElements( ( prev: JSX.Element[] ) => {
+                        return prev.filter( ( e: JSX.Element ) => {
+                            return e.props.id !== id
+                        })
+                    })
                 }
             })
             .catch( ( e: AxiosError ) => {
