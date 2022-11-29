@@ -277,7 +277,6 @@ server.get('/api/user/add/:id', async (req, res) => {
             csvData += (index < lines.length - 1) ? arrToString + '\n' : arrToString;
         })
 
-        console.log(csvData)
         res.setHeader('Content-Disposition', `attachment; filename="merania.csv"`)
         res.setHeader('Content-Type', 'application/octet-stream; charset=utf-8')
         res.setHeader('Content-Length', csvData.length)
