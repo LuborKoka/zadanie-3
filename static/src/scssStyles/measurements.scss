@@ -9,8 +9,8 @@
             width: 50%;
             display: flex;
             justify-content: center;
-            p, .active {
-                color: rgb(16, 16, 155);
+            p{
+                color: black;
                 transition: all .2s;
                 position: relative;
                 padding: .25rem .5rem;
@@ -20,20 +20,16 @@
                 cursor: pointer;
                 font-weight: bold;
                 font-size: 20px;
+                border-radius: 3px;
 
-                &::after {
-                    content: '';
-                    position: absolute;
-                    bottom: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 4px;
-                    background-color: rgb(16, 16, 155);
-                    transform: translateY(5px);
+                &:hover {
+                    color:rgb(16, 16, 155);
+                    box-shadow: inset 0 0 10px 1px rgba(16, 16, 155, .2);
                 }
-                &:hover::after {
-                    transform: translateY(0);
-                }
+            }
+            .active {
+                color: rgb(16, 16, 155);
+                box-shadow: inset 0 0 10px 1px rgba(16, 16, 155, .2);
             }
             
         }
@@ -60,6 +56,14 @@
                 input {
                     max-height: 2rem;
                     padding: .25rem .5rem;
+                    outline: none;
+                    border-radius: 3px;
+                    border: 1px solid black;
+
+                    &:focus {
+                        color:rgb(16, 16, 155);
+                        border: 1px solid rgb(16, 16, 155);
+                    }
                 }
             }
 
@@ -80,6 +84,18 @@
                     background-color: rgba(16, 16, 155, .8);
                 }
             }  
+        }
+
+        select {
+            max-height: 2rem;
+            outline: none;
+            border-radius: 3px;
+            border: 1px solid black;
+
+            &:focus {
+                border: 1px solid rgb(16, 16, 155);
+                color:rgb(16, 16, 155);
+            }
         }
     }
 

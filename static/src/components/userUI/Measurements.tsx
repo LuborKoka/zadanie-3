@@ -20,6 +20,7 @@ interface dataType {
 const Measurements: React.FC = ()=> {
     const [measurements, setMeasurements] = useState<JSX.Element[]>([])
     const [element, setElement] = useState<JSX.Element>(<Input setMeasurements={setMeasurements}/>)
+    const [active, setActive] = useState<boolean>(true)
 
     const session: contextInterface | null = useContext(context)
 
@@ -46,10 +47,10 @@ const Measurements: React.FC = ()=> {
             <div className="measurements-container">
                 <nav>
                     <div>
-                        <p onClick={ ()=>setElement(<Input setMeasurements={setMeasurements}/>)}>INPUT</p>
+                        <p className={ active ? 'active' : undefined} onClick={ ()=>{ setElement(<Input setMeasurements={setMeasurements}/>); setActive(true) }}>INPUT</p>
                     </div>
                     <div>
-                        <p onClick= {()=>setElement(<Import  />)}>IMPORT</p>
+                        <p className={ active ? undefined : 'active'} onClick= { ()=> {setElement(<Import  />); setActive(false) }}>IMPORT</p>
                     </div>
                 </nav>
                 {element}

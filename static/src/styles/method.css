@@ -4,7 +4,7 @@
 }
 .method-container .header, .method-container .list {
   display: grid;
-  grid-template-columns: 60px 150px 1fr 60px;
+  grid-template-columns: 60px 250px 1fr 60px;
 }
 .method-container .header h3, .method-container .header div, .method-container .list h3, .method-container .list div {
   border-bottom: 1px solid black;
@@ -17,9 +17,44 @@
 .method-container .header h3 i:hover, .method-container .header div i:hover, .method-container .list h3 i:hover, .method-container .list div i:hover {
   color: red;
 }
+.method-container .header .trash, .method-container .list .trash {
+  display: flex;
+  align-items: center;
+}
 .method-container .header p, .method-container .list p {
   border-bottom: 1px solid black;
   padding: 0.25rem 0.75rem;
+}
+.method-container .method-input {
+  padding-bottom: 5vh;
+}
+.method-container .method-input input {
+  padding: 0.25rem 0.5rem;
+  outline: none;
+  border-radius: 3px;
+  border: 1px solid black;
+  font-size: 16px;
+  margin-right: 3rem;
+}
+.method-container .method-input input:focus {
+  border: 1px solid rgb(16, 16, 155);
+}
+.method-container .method-input button {
+  background-color: rgb(16, 16, 155);
+  padding: 0.25rem 0.5rem;
+  font-size: 20px;
+  color: white;
+  cursor: pointer;
+  border: none;
+  border-radius: 3px;
+  transition: all 0.2s;
+}
+.method-container .method-input button:hover {
+  background-color: rgba(16, 16, 155, 0.8);
+}
+.method-container .method-input form {
+  display: grid;
+  grid-template-columns: calc(200px + 3rem) 1fr clamp(102px, 20%, 130px);
 }
 
 /*# sourceMappingURL=method.css.map */

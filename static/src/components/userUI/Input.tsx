@@ -22,7 +22,7 @@ interface response {
 const Input: React.FC<props> = ({ setMeasurements })=> {
     const date = useRef<HTMLInputElement>(null)
     const weight = useRef<HTMLInputElement>(null)
-    const method = useRef<HTMLInputElement>(null)
+    const method = useRef<HTMLSelectElement>(null)
     const waist = useRef<HTMLInputElement>(null)
     const hips = useRef<HTMLInputElement>(null)
 
@@ -60,31 +60,21 @@ const Input: React.FC<props> = ({ setMeasurements })=> {
             setErrorTxt('Hips circumference not set')
             return
         }   
-
-        let incorrectMethod: boolean = true
-
-        options.forEach(( o: JSX.Element ) => {
-            if ( o.props.value === method.current?.value ) {
-                incorrectMethod = false
-            }
-        })
-
-        if ( incorrectMethod ) {
+            
+        if ( options.length === 0 ) {
             setError(true)
-            if ( options.length === 0 )
-                setErrorTxt('Create a method')
-            else
-                setErrorTxt('Select a method name from the list')
-
+            setErrorTxt('Create a method')
             return
         }
+                
+
 
 
         axios
             .put('http://localhost:8080/api/user/measurements', {
                 params: {
                     userID: session?.userID,
-                    method: method.current?.value,
+                    method: method.current?.value[0],
                     date: date.current?.value,
                     weight: weight.current?.value,
                     waist: waist.current?.value,
@@ -92,17 +82,15 @@ const Input: React.FC<props> = ({ setMeasurements })=> {
                 }
             })
             .then( ( res: AxiosResponse ) => {
+                //console.log(method.current?.)
                 let data: response = res.data
                 if ( data.message === 'Success')
                     setMeasurements( ( prev: JSX.Element[] ) => {
                         return [...prev, <MeasurementItem date={date.current?.value} weight={weight.current?.value} waist={waist.current?.value}
-                        hips={hips.current?.value} method={method.current?.value}  setter={setMeasurements} id={data.measurementID} key={data.measurementID} />]
+                        hips={hips.current?.value} method={method.current?.value[1]}  setter={setMeasurements} id={data.measurementID} key={data.measurementID} />]
                     })
-            })
-
-        
+            })        
     }
-
 
     useEffect(()=> {
         if ( data === undefined ) return
@@ -111,7 +99,7 @@ const Input: React.FC<props> = ({ setMeasurements })=> {
 
         d.forEach((e: methodData) => {
             setOptions( (prev: JSX.Element[]) => {
-                return [...prev, <option value={`${e.name}`} key={e.id} />]
+                return [...prev, <option value={`${[e.id, e.name]}`} key={e.id}>{e.name}</option>]
             })
         } )
     }, [data])
@@ -126,10 +114,9 @@ const Input: React.FC<props> = ({ setMeasurements })=> {
                         <input type='text' placeholder="Weight" ref={weight} />
                         <input type='text' placeholder="Waist" ref={waist} />
                         <input type='text' placeholder="Hips"  ref={hips}/>
-                        <input placeholder='Method' list='types' ref={method} />
-                        <datalist id='types'>
+                        <select placeholder='Method' ref={method}>
                             {options}
-                        </datalist>
+                        </ select>
                     </div>
                     <button onClick={submit}>Submit</button>
                 </form>
