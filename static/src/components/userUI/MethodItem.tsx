@@ -33,6 +33,7 @@ const MethodItem: React.FC<props> = ({ id, name, description, setElements }) => 
 
     return(
         <React.Fragment>
+            <p>{id}</p>
             <p>{name}</p>
             <p>{description}</p>
             <div onClick={del}>
