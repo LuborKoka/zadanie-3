@@ -1,8 +1,10 @@
 import axios, { AxiosResponse } from "axios";
-import React, { useContext, useRef } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { context, contextInterface } from "../../App";
 import useErrorMessage from "../../hooks/useErrorMessage";
+import useFetch from "../../hooks/useFetch";
 import MeasurementItem from "./MeasurementItem";
+import { methodData } from "./Methods";
 
 
 interface props {
@@ -26,7 +28,11 @@ const Input: React.FC<props> = ({ setMeasurements })=> {
 
     const session: contextInterface | null = useContext(context)
 
+    const [options, setOptions] = useState<JSX.Element[]>([])
+
     const {setError, setErrorTxt, ErrorMessage } = useErrorMessage()
+    
+    const { data } = useFetch(`http://localhost:8080/api/user/init/method/${session?.userID}`)
 
     const submit = ( e: React.FormEvent<EventTarget> ): void => {
         e.preventDefault()
@@ -55,6 +61,25 @@ const Input: React.FC<props> = ({ setMeasurements })=> {
             return
         }   
 
+        let incorrectMethod: boolean = true
+
+        options.forEach(( o: JSX.Element ) => {
+            if ( o.props.value === method.current?.value ) {
+                incorrectMethod = false
+            }
+        })
+
+        if ( incorrectMethod ) {
+            setError(true)
+            if ( options.length === 0 )
+                setErrorTxt('Create a method')
+            else
+                setErrorTxt('Select a method name from the list')
+
+            return
+        }
+
+
         axios
             .put('http://localhost:8080/api/user/measurements', {
                 params: {
@@ -78,6 +103,19 @@ const Input: React.FC<props> = ({ setMeasurements })=> {
         
     }
 
+
+    useEffect(()=> {
+        if ( data === undefined ) return
+        let d: methodData[] = data.data
+        setOptions([])
+
+        d.forEach((e: methodData) => {
+            setOptions( (prev: JSX.Element[]) => {
+                return [...prev, <option value={`${e.name}`} key={e.id} />]
+            })
+        } )
+    }, [data])
+
     return(
         <React.Fragment>    
             {ErrorMessage}
@@ -90,9 +128,7 @@ const Input: React.FC<props> = ({ setMeasurements })=> {
                         <input type='text' placeholder="Hips"  ref={hips}/>
                         <input placeholder='Method' list='types' ref={method} />
                         <datalist id='types'>
-                            <option value={'Weight'} />
-                            <option value={'2nd param'} />
-                            <option value={'3rd param'} />
+                            {options}
                         </datalist>
                     </div>
                     <button onClick={submit}>Submit</button>
