@@ -6,16 +6,10 @@ import '../../styles/method.css'
 import useErrorMessage from "../../hooks/useErrorMessage"
 import useFetch from "../../hooks/useFetch"
 
-interface data {
+export interface methodData {
     id: number,
     name: string,
     description: string
-}
-
-
-interface res {
-    message: string
-    data: data[]
 }
 
 
@@ -34,9 +28,9 @@ const Methods: React.FC = () => {
         setElements([])
 
         if ( data !== undefined && data.message === 'Success' ) {
-            let d: data[] = data.data
+            let d: methodData[] = data.data
 
-            d.forEach( (e: data) => {
+            d.forEach( (e: methodData) => {
                 setElements(( prev: JSX.Element[]) => {
                     return [...prev, <MethodItem id={e.id} name={e.name} description={e.description} setElements={setElements} key={e.id}/>]
                 })
@@ -53,6 +47,12 @@ const Methods: React.FC = () => {
         if ( name.current?.value === '' ) {
             setError(true) 
             setErrorTxt('Name is not set')
+            return
+        }
+
+        if ( name.current?.value.length !== undefined && name.current?.value.length > 50 ) {
+            setError(true)
+            setErrorTxt('Method name is too long')
             return
         }
 
@@ -88,13 +88,14 @@ const Methods: React.FC = () => {
             <div className="method-container">
                 <div className="method-input">
                     <form>
-                        <input type={'text'} placeholder='Name' ref={name}/>
+                        <input type={'text'} placeholder='Name (Max 50 chars)' ref={name}/>
                         <input type={'text'} placeholder='Description' ref={desc}/>
 
                         <button onClick={submit}>Submit</button>
                     </form>
                 </div>
                 <div className="header">
+                    <h3>ID</h3>
                     <h3>Name</h3>
                     <h3>Description</h3>
                     <div />
