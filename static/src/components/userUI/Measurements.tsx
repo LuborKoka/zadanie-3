@@ -9,7 +9,6 @@ import MeasurementItem from "./MeasurementItem";
 
 interface dataType {
     id: number,
-    userID: number,
     date: string,
     weight: string,
     waist: string,

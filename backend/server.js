@@ -155,9 +155,9 @@ server.get('/api/user/init/:id', async (req, res) =>{
     const { id } = req.params
     try {
         const r = await db.query(`
-            SELECT m.*, me.name
+            SELECT m.id, m.weight, m.date, m.waist, m.hips, m.method_id, COALESCE(me.name, 'Method not set') AS name
             FROM merania AS m
-            JOIN methods AS me ON m.method_id = me.id
+            LEFT JOIN methods AS me ON m.method_id = me.id
             WHERE userid = $1
             ORDER BY date
         `, [id])
