@@ -18,11 +18,24 @@ interface res {
     mail: string
 }
 
+interface users {
+    id: number,
+    name: string,
+    age: number,
+    weight: number,
+    height: number,
+    email: string
+}
+
 const AdminUI: React.FC = () => {
     // eslit-disable-next-line
     const {data, loading} = useFetch('http://localhost:8080/api/admin/init')
+
     const [usersCount, setUsersCount] = useState<number>(0)
     const [elements, setElements] = useState<JSX.Element[]>([])
+
+    const [csv, setCsv] = useState<File>()
+
     const elDiv = useRef<HTMLDivElement>(null)
     const bdyDiv = useRef<HTMLDivElement>(null)
     const input = useRef<HTMLInputElement>(null)
@@ -37,6 +50,7 @@ const AdminUI: React.FC = () => {
 
     const { setError, setErrorTxt, ErrorMessage } = useErrorMessage()
 
+    //list of users
     useEffect( ()=> {
         if (data !== undefined) {
             let d = JSON.parse(data.usersData)
@@ -49,11 +63,12 @@ const AdminUI: React.FC = () => {
             )
         }
     }, [data, setError, setErrorTxt])
-
+    //styling, not important
     useEffect(()=> {
         setUsersCount(elements.length)
     }, [elements])
 
+    //styling, not important
     useEffect(()=> {
         if ( elDiv.current === null || bdyDiv.current == null ) return
 
@@ -76,13 +91,50 @@ const AdminUI: React.FC = () => {
 
     }, [usersCount])
 
-
-    const submit = (e: React.FormEvent<EventTarget>): void => {
-        e.preventDefault()
-        setErrorTxt('This ain\'t working')
-        setError(true)
+    //import users
+    const setFile = ():void => {
+        if ( input.current === null || input.current.files === null ) return
+        setCsv(input.current.files[0])
     }
 
+    //submit csv file
+    const submit = (e: React.FormEvent<EventTarget>): void => {
+        e.preventDefault()
+        if ( input.current !== null && input.current.files?.length === 0 ) {
+            setError(true)
+            setErrorTxt('Select a file')
+        }
+
+        const data = new FormData()
+        if ( csv === undefined ) return
+        data.append('name', csv.name)
+        data.append('file', csv)
+
+        
+        axios({
+            method: 'POST',
+            url: 'http://localhost:8080/api/admin/import',
+            headers: {
+                ContentType: 'multipart/form-data'
+            },
+            data: data
+        })
+        .then((res: AxiosResponse) => {
+            const data: users[] = res.data.users
+            setElements([])
+
+            data.forEach((d: users) => {
+                setElements((prev: JSX.Element[]) => {
+                    return [...prev, <UserItem name={d.name} email={d.email} age={d.age} id={d.id} height={d.height} weight={d.weight}
+                    setError={setError} setElements={setElements} setErrorTxt={setErrorTxt} />]
+                })
+            })
+        })
+        .catch(err => console.log(err));
+
+    }
+
+    //add user
     const submitUser = (e: React.FormEvent<EventTarget>): void => {
         e.preventDefault()
         if ( password.current?.value !== confirmPassword.current?.value ) {
@@ -103,7 +155,6 @@ const AdminUI: React.FC = () => {
                 }
             })
             .then( (res: AxiosResponse) => {
-                console.log(res)
                 const data: res = res.data
                 if ( data.message === 'Success' ) {
                     setError(true)
@@ -180,7 +231,7 @@ const AdminUI: React.FC = () => {
                     </div>
                     <form className="import-container">
                         <p>Import: </p>
-                        <input type={'file'} accept=".csv" ref={input} />
+                        <input type={'file'} accept=".csv" ref={input} onChange={setFile} />
                         <button onClick={submit}>Submit</button>
                     </form>
                 </div>

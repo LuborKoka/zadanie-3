@@ -3,9 +3,16 @@ const server = express()
 const cors = require('cors')
 const port = 8080
 const db = require('./database')
+const bodyparser = require('body-parser')
+const parse = require('csv-parse').parse
+const multer = require('multer')
+const os = require('os')
+const upload = multer({ dest: os.tmpdir() })
+const fs = require('fs')
 
 server.use(cors())
 server.use(express.json({extended: false}))
+server.use(bodyparser.json())
 
 var activeSessions = []
 
@@ -377,7 +384,7 @@ server.get('/api/user/add/:id', async (req, res) => {
 
     try {
         const r = await db.query(`
-            SELECT id, name, email, age, height, weight
+            SELECT id, name, email, COALESCE(age, 0) AS age, COALESCE(height, 0) AS height, COALESCE(weight, 0) AS weight
             FROM users
             WHERE id > 1
             ORDER BY name
@@ -483,9 +490,67 @@ server.get('/api/admin/export', async (req, res) => {
     }
 })
 
-server.post('/api/admin/import', async(req, res) => {
+server.post('/api/admin/import', upload.single('file'), async(req, res) => {
     const response = {}
+    const file = req.file
+    const data = fs.readFileSync(file.path)
+    const users = []
 
+    response.users = []
+
+    parse(data, (err, records) => {
+        if (err) {
+          console.error(err)
+          res.status(400).json({success: false, message: 'An error occurred'})
+        }
+
+        records.forEach( r => {
+            users.push(r[0])
+        })
+      })
+    const sleep = ms => new Promise(r => setTimeout(r, ms))
+    await sleep(1000)
+    
+    let query = ''
+
+    users.forEach((u, index) => {
+        const user = {}
+        const data = u.split(';')
+        user.name = data[0]
+        user.email = data[2]
+        user.age = data[3]
+        user.height = data[4]
+        user.weight = data[5]
+        response.users.push(user)
+        query = query.concat(`('${data[0]}', '${data[1]}', '${data[2]}', ${data[3]}, ${data[4]}, ${data[5]})`)
+        if ( index < users.length - 1 ) query = query.concat(',')
+    })
+
+    //pokial je cesta, ako toto spravit cez prepared statement, rad sa ju dozviem
+    try {
+        const r = await db.query(`
+            INSERT INTO users(name, password, email, age, height, weight)
+            VALUES ${query}
+            RETURNING id
+        `)
+
+        r.rows.forEach((r, i) => {
+            response.users[i].id = r.id
+        })
+
+       /* const rr = await db.query(`
+            DELETE
+            FROM users
+            WHERE id < $1 AND id != 0
+        `, [r.rows[0].id])*/
+
+        res.status(200).send(JSON.stringify(response)).end()
+    } catch(e) {
+        console.log(e)
+        res.status(500).end()
+    }
+
+    res.status(200).end()
 
 })
 
@@ -510,6 +575,7 @@ server.post('/api/admin/import', async(req, res) => {
         res.status(500).send(JSON.stringify(response)).end()
     }
  })
+
 
 server.patch('/api/adds/inc/:id', async(req, res) => {
     const { id } = req.params
