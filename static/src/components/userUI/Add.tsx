@@ -68,10 +68,11 @@ const Add: React.FC = () => {
                         <i className="fa-solid fa-xmark"></i>
                     </div>
                 </div>
-                <a target='_blank' href={`https://${addData[0]}`} rel='noreferrer' onClick={incrAdd} >
-                    {/*<img width='150px' height='150px' alt='add_img' src="https://img.icons8.com/external-those-icons-lineal-color-those-icons/24/null/external-ad-marketing-and-advertising-those-icons-lineal-color-those-icons.png"/>*/}
-                    {`https://${addData[0]}`}
-                </a>
+                <div className="add-image">
+                    <a target='_blank' href={`${addData[0]}`} rel='noreferrer' onClick={incrAdd} >
+                        <img width='150px' height='150px' alt='add_img' src={addData[1]} />
+                    </a>
+                </div>
             </div>
 
         </React.Fragment>

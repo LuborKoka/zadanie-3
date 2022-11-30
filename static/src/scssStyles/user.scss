@@ -19,6 +19,7 @@
         position: absolute;
         top: 0;
         left: 0;
+        max-height: 45px;
         .close-add {
             display: flex;
             align-items: center;
@@ -52,6 +53,17 @@
             }
         }
 
+    }
+
+    .add-image {
+        position: absolute;
+        top: 46px;
+        left: 0;
+        width: 100%;
+        height: calc(100% - 46px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 }
 

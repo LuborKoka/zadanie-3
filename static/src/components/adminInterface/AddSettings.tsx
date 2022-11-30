@@ -8,6 +8,7 @@ import AddItem from "./AddItem";
 interface dataTypes {
     id: number,
     image: string,
+    text: string,
     link: string,
     count: number
 }
@@ -44,7 +45,7 @@ const AddSettings: React.FC = () => {
                 setAddElements([])
                 data.forEach( (e: dataTypes) => {
                     setAddElements( (prev: JSX.Element[]) => {
-                        return [...prev, <AddItem id={e.id} link={e.link} image={e.image} count={e.count} key={e.id} />]
+                        return [...prev, <AddItem id={e.id} text={e.text} count={e.count} key={e.id} />]
                     })
                 })
             })

@@ -4,12 +4,11 @@ import { addContext, addTypes } from "./AddSettings";
 
 interface props {
     id: number,
-    image: string,
-    link: string,
+    text: string,
     count: number
 }
 
-const AddItem: React.FC<props> = ({ id, image, link, count}) => {
+const AddItem: React.FC<props> = ({ id, text, count}) => {
 
     const session: contextInterface | null = useContext(context)
     const adds: addTypes | null = useContext(addContext)
@@ -33,7 +32,7 @@ const AddItem: React.FC<props> = ({ id, image, link, count}) => {
         <React.Fragment>
             <div className="add-item-container">
                 <div className="link" >
-                    <p onClick={setAdd}>{link}</p>
+                    <p onClick={setAdd}>{text}</p>
                     <i className={active ? "fa-solid fa-circle-check active" : "fa-solid fa-circle-check"} />
                 </div>
                 <p className="count">{count}</p>
