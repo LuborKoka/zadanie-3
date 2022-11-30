@@ -213,13 +213,20 @@ server.get('/api/user/add/:id', async (req, res) => {
 
     try {
         const r = await db.query(`
-            INSERT INTO merania (userID, weight, date, waist, hips, method)
+            INSERT INTO merania (userID, weight, date, waist, hips, method_id)
             VALUES ($1, $2, $3, $4, $5, $6)
             RETURNING id
         `, [userID, weight, date, waist, hips, method])
+        
+        const rr = await db.query(`
+            SELECT name
+            FROM methods
+            WHERE id = ${method}
+        `)
 
         response.message = 'Success'
         response.measurementID = r.rows[0].id
+        response.methodName = rr.rows[0].name
         res.status(200).send(JSON.stringify(response)).end()
     } catch (e) {
         console.log(e)
@@ -321,10 +328,10 @@ server.get('/api/user/add/:id', async (req, res) => {
     try {
         const r = await db.query(`
             INSERT INTO methods(id, name, description, user_id)
-            SELECT max(id) + 1, $1, $2, $3
+            SELECT COALESCE(MAX(id), 0) + 1, $1, $2, $3
             FROM methods
             RETURNING id
-        `, [name, description, userID])
+    `, [name, description, userID])
 
         response.message = 'Success'
         response.id = r.rows[0].id
@@ -338,8 +345,9 @@ server.get('/api/user/add/:id', async (req, res) => {
     }
  })
 
- server.delete('/api/user/delete/method/:id', async(req, res) => {
+ server.delete('/api/user/delete/method/:id/:userID', async(req, res) => {
     const { id } = req.params
+    const { userID } = req.params
 
     const response = {}
 
@@ -347,8 +355,8 @@ server.get('/api/user/add/:id', async (req, res) => {
         const r = await db.query(`
             DELETE 
             FROM methods
-            WHERE id = $1
-        `, [id])
+            WHERE id = $1 AND user_id = $2
+        `, [id, userID])
 
         response.message = 'Success'
 
@@ -387,6 +395,40 @@ server.get('/api/user/add/:id', async (req, res) => {
     }
 })
 
+server.post('/api/admin/adduser', async(req, res) => {
+    const name = req.body.params.name
+    const password = req.body.params.password
+    const mail = req.body.params.mail
+    const age = req.body.params.age
+    const height = req.body.params.height
+    const weight = req.body.params.weight
+
+    const response = {}
+
+    try {
+        const r = await db.query(`
+            INSERT INTO users(name, password, email, age, height, weight )
+            VALUES ($1, $2, $3, $4, $5, $6)
+            RETURNING id, name, email, age, height, weight
+        `, [name, password, mail, age, height, weight])
+
+        response.message = 'Success'
+        response.userID = r.rows[0].id
+        response.name = r.rows[0].name
+        response.mail = r.rows[0].email
+        response.age = r.rows[0].age
+        response.height = r.rows[0].height
+        response.weight = r.rows[0].weight
+        res.status(200).send(JSON.stringify(response)).end()
+    } catch(e) {
+        console.log(e)
+        if ( e.constraint === 'users_name_key' ) {
+            response.message = 'Username already exists'
+            res.status(400).send(JSON.stringify(response)).end()
+        }
+    }
+})
+
 server.delete('/api/admin/delete/:id', async (req, res) => {
     const { id } = req.params
 
@@ -395,7 +437,13 @@ server.delete('/api/admin/delete/:id', async (req, res) => {
         const r = await db.query(`
             DELETE
             FROM users 
-            WHERE id = ${id}
+            WHERE id = ${id};
+            DELETE 
+            FROM merania
+            WHERE userid = ${id};
+            DELETE
+            FROM methods
+            WHERE user_id = ${id}
         `)        
         res.status(200).send({'message': 'Success'}).end()
 

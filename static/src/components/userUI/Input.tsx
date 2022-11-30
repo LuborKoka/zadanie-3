@@ -13,7 +13,8 @@ interface props {
 
 interface response {
     message: string,
-    measurementID: number
+    measurementID: number,
+    methodName: string,
     error?: any,
 }
 
@@ -67,14 +68,15 @@ const Input: React.FC<props> = ({ setMeasurements })=> {
             return
         }
                 
-
-
+        const len = (i: string):number => {
+            return i.toString().length
+        }
 
         axios
             .put('http://localhost:8080/api/user/measurements', {
                 params: {
                     userID: session?.userID,
-                    method: method.current?.value[0],
+                    method: method.current?.value,
                     date: date.current?.value,
                     weight: weight.current?.value,
                     waist: waist.current?.value,
@@ -82,12 +84,12 @@ const Input: React.FC<props> = ({ setMeasurements })=> {
                 }
             })
             .then( ( res: AxiosResponse ) => {
-                //console.log(method.current?.)
+                
                 let data: response = res.data
                 if ( data.message === 'Success')
                     setMeasurements( ( prev: JSX.Element[] ) => {
                         return [...prev, <MeasurementItem date={date.current?.value} weight={weight.current?.value} waist={waist.current?.value}
-                        hips={hips.current?.value} method={method.current?.value[1]}  setter={setMeasurements} id={data.measurementID} key={data.measurementID} />]
+                        hips={hips.current?.value} method={data.methodName}  setter={setMeasurements} id={data.measurementID} key={data.measurementID} />]
                     })
             })        
     }
@@ -99,7 +101,7 @@ const Input: React.FC<props> = ({ setMeasurements })=> {
 
         d.forEach((e: methodData) => {
             setOptions( (prev: JSX.Element[]) => {
-                return [...prev, <option value={`${[e.id, e.name]}`} key={e.id}>{e.name}</option>]
+                return [...prev, <option value={`${e.id}`} key={e.id}>{e.name}</option>]
             })
         } )
     }, [data])

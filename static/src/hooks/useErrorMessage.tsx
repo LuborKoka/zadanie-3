@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 export default function useErrorMessage () {
     const [error, setError] = useState<boolean>(false)
-    const [errorTxt, setErrorTxt] = useState<string>('')
+    const [errorTxt, setErrorTxt] = useState<string | undefined>('')
     
     const close = () => {
         setError(false)

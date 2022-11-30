@@ -10,7 +10,7 @@ interface Props {
     weight: number,
     id: number,
     setError: React.Dispatch<React.SetStateAction<boolean>>,
-    setErrorTxt: React.Dispatch<React.SetStateAction<string>>,
+    setErrorTxt: React.Dispatch<React.SetStateAction<string | undefined>>,
     setElements: React.Dispatch<React.SetStateAction<JSX.Element[]>>
 }
 
@@ -53,7 +53,7 @@ const UserItem: React.FC<Props> = ({ name, email, age, height, weight, id, setEr
                 <p>{email}</p>
                 <p>Age: {age}</p>
                 <p>Height: {height}cm</p>
-                <p>Weight: {weight}cm</p>
+                <p>Weight: {weight}kg</p>
 
 
                 <div className="center">

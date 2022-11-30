@@ -93,7 +93,7 @@ const Register: React.FC = () => {
                         </div>
                         <div className='form-input'>
                             <input type={'password'} name='passwordAgain' autoComplete='off' required ref={passAgain} onChange={comparePasswords}></input>
-                            <label htmlFor='passwordAgain'><span>Password Again</span></label>
+                            <label htmlFor='passwordAgain'><span>Confirm Password</span></label>
                         </div>
                         <div className='form-input'>
                             <input type={'email'} name='email' autoComplete='off' required ref={email}></input>

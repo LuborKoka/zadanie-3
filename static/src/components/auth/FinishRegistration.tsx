@@ -65,11 +65,11 @@ const FinishRegistration: React.FC = () => {
                         </div>
                         <div className='form-input'>
                             <input type={'text'} name='height' autoComplete='off' required ref={height}></input>
-                            <label htmlFor='height'><span>Height</span></label>
+                            <label htmlFor='height'><span>Height(cm)</span></label>
                         </div>
                         <div className='form-input'>
                             <input type={'text'} name='Weight' autoComplete='off' required ref={weight}></input>
-                            <label htmlFor='Weight'><span>Weight</span></label>
+                            <label htmlFor='Weight'><span>Weight(kg)</span></label>
                         </div>
                         <div className='center'>
                             <button onClick={handleClick}>LOGIN</button>
