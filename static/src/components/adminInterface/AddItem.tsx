@@ -8,6 +8,7 @@ interface props {
     count: number
 }
 
+
 const AddItem: React.FC<props> = ({ id, text, count}) => {
 
     const session: contextInterface | null = useContext(context)

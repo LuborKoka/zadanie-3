@@ -4,9 +4,8 @@ import { context, contextInterface } from "../../App";
 
 interface props {
     date?: string,
-    weight?: string,
-    waist?: string,
-    hips?: string,
+    type?: string,
+    value?: string,
     setter: React.Dispatch<React.SetStateAction<JSX.Element[]>>
     id: number,
     method?: string
@@ -17,12 +16,13 @@ interface response {
     error?: any
 }
 
-const MeasurementItem: React.FC<props> = ({ date, weight, waist, hips, setter, id, method })=> {
+
+const MeasurementItem: React.FC<props> = ({ date, type, value, setter, id, method })=> {
     const session: contextInterface | null = useContext(context)
 
     function deleteMeasurement():void {
         axios
-            .delete(`http://localhost:8080/api/user/measurement/${session?.userID}/${id}`)
+            .delete(`http://localhost:8080/api/user/measurement/${session?.userID}/${id}/${type}`)
             .then( (res: AxiosResponse) => {
                 let data: response = res.data
                 if ( data.message === 'Success' ) {
@@ -40,9 +40,8 @@ const MeasurementItem: React.FC<props> = ({ date, weight, waist, hips, setter, i
     return(
         <React.Fragment>
             <p>{date}</p>
-            <p>{weight}</p>
-            <p>{waist}</p>
-            <p>{hips}</p>
+            <p>{type}</p>
+            <p>{value}</p>
             <p>{method}</p>
             <div className="delete">
                 <i className="fas fa-trash-alt" onClick={deleteMeasurement}/>

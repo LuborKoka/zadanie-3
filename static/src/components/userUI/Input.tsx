@@ -22,10 +22,9 @@ interface response {
 
 const Input: React.FC<props> = ({ setMeasurements })=> {
     const date = useRef<HTMLInputElement>(null)
-    const weight = useRef<HTMLInputElement>(null)
+    const value = useRef<HTMLInputElement>(null)
     const method = useRef<HTMLSelectElement>(null)
-    const waist = useRef<HTMLInputElement>(null)
-    const hips = useRef<HTMLInputElement>(null)
+    const type = useRef<HTMLSelectElement>(null)
 
     const session: contextInterface | null = useContext(context)
 
@@ -44,23 +43,11 @@ const Input: React.FC<props> = ({ setMeasurements })=> {
             return
         }
 
-        if ( weight.current?.value === '' ) {
+        if ( value.current?.value === '' ) {
             setError(true)
             setErrorTxt('Weight not set')
             return
         }
-
-        if ( waist.current?.value === '' ) {
-            setError(true)
-            setErrorTxt('Waist circumference not set')
-            return
-        }
-
-        if ( hips.current?.value === '' ) {
-            setError(true)
-            setErrorTxt('Hips circumference not set')
-            return
-        }   
             
         if ( options.length === 0 ) {
             setError(true)
@@ -78,9 +65,8 @@ const Input: React.FC<props> = ({ setMeasurements })=> {
                     userID: session?.userID,
                     method: method.current?.value,
                     date: date.current?.value,
-                    weight: weight.current?.value,
-                    waist: waist.current?.value,
-                    hips: hips.current?.value
+                    value: value.current?.value,
+                    type: type.current?.value
                 }
             })
             .then( ( res: AxiosResponse ) => {
@@ -88,8 +74,8 @@ const Input: React.FC<props> = ({ setMeasurements })=> {
                 let data: response = res.data
                 if ( data.message === 'Success')
                     setMeasurements( ( prev: JSX.Element[] ) => {
-                        return [...prev, <MeasurementItem date={date.current?.value} weight={weight.current?.value} waist={waist.current?.value}
-                        hips={hips.current?.value} method={data.methodName}  setter={setMeasurements} id={data.measurementID} key={data.measurementID} />]
+                        return [...prev, <MeasurementItem date={date.current?.value} value={value.current?.value}
+                        type={'Weight'} method={data.methodName}  setter={setMeasurements} id={data.measurementID} key={data.measurementID} />]
                     })
             })        
     }
@@ -113,9 +99,12 @@ const Input: React.FC<props> = ({ setMeasurements })=> {
                 <form>
                     <div className="data">
                         <input type='date' ref={date} />
-                        <input type='text' placeholder="Weight" ref={weight} />
-                        <input type='text' placeholder="Waist" ref={waist} />
-                        <input type='text' placeholder="Hips"  ref={hips}/>
+                        <input type='text' placeholder="Value" ref={value} />
+                        <select placeholder="Type" ref={type}>
+                            <option value={'Weight'}>Weight</option>
+                            <option value={'Waist'}>Waist</option>
+                            <option value={'Hips'}>Hips</option>
+                        </select>
                         <select placeholder='Method' ref={method}>
                             {options}
                         </ select>

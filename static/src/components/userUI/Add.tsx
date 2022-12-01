@@ -70,7 +70,7 @@ const Add: React.FC = () => {
                 </div>
                 <div className="add-image">
                     <a target='_blank' href={`${addData[0]}`} rel='noreferrer' onClick={incrAdd} >
-                        <img width='150px' height='150px' alt='add_img' src={addData[1]} />
+                        <img alt='add_img' src={addData[1]} />
                     </a>
                 </div>
             </div>

@@ -1,3 +1,4 @@
+import axios, { AxiosResponse } from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { context, contextInterface } from "../../App";
 import useFetch from "../../hooks/useFetch";
@@ -10,10 +11,15 @@ import MeasurementItem from "./MeasurementItem";
 interface dataType {
     id: number,
     date: string,
-    weight: string,
-    waist: string,
-    hips: string,
-    name: string
+    value: string,
+    name: string,
+    type: string
+}
+
+interface options {
+    id: number,
+    name: string,
+    decription: string
 }
 
 
@@ -21,6 +27,7 @@ const Measurements: React.FC = ()=> {
     const [measurements, setMeasurements] = useState<JSX.Element[]>([])
     const [element, setElement] = useState<JSX.Element>(<Input setMeasurements={setMeasurements}/>)
     const [active, setActive] = useState<boolean>(true)
+    const [options, setOptions] = useState<JSX.Element[]>([])
 
     const session: contextInterface | null = useContext(context)
 
@@ -32,11 +39,49 @@ const Measurements: React.FC = ()=> {
             let d: dataType[] = data.data
             d.forEach( (e: dataType) => {
                 setMeasurements( ( prev: JSX.Element[] ) => {
-                    return [...prev, <MeasurementItem date={e.date.slice(0, 10)}  weight={e.weight} waist={e.waist} hips={e.hips} method={e.name} setter={setMeasurements} id={e.id} key={e.id}/>]
+                    return [...prev, <MeasurementItem date={e.date.slice(0, 10)} type={e.type} value={e.value} method={e.name} setter={setMeasurements} id={e.id} key={prev.length}/>]
                 })
             })
         }
     }, [data])
+
+
+    useEffect(()=> {
+        axios
+            .get(`http://localhost:8080/api/user/init/method/${session?.userID}`)
+            .then((e: AxiosResponse) => {
+                setOptions([<option value={'None'}>None</option>])
+                const d: {message: string, data: options[]} = e.data
+                d.data.forEach((d: options) => {
+                    setOptions((p: JSX.Element[]) => {
+                        return [...p, <option value={d.name} key={d.id}>{d.name}</option>]
+                    })
+                })
+            })
+    }, [])
+
+    const filterElements = (ev: React.ChangeEvent<HTMLSelectElement>):void => {
+        const d: dataType[] = data.data
+        if ( ev.target.value === 'None' ) { 
+            setMeasurements((p: JSX.Element[]) => {return []}) 
+            d.forEach( (e: dataType) => {
+                setMeasurements( ( prev: JSX.Element[] ) => {
+                    return [...prev, <MeasurementItem date={e.date.slice(0, 10)} type={e.type} value={e.value} method={e.name} setter={setMeasurements} id={e.id} key={prev.length}/>]
+                    
+                })
+            })
+        }
+
+        else {
+            setMeasurements((p: JSX.Element[]) => {return []}) 
+            d.forEach( (e: dataType) => {
+                setMeasurements( ( prev: JSX.Element[] ) => {
+                    if ( ev.target.value === e.name ) return [...prev, <MeasurementItem date={e.date.slice(0, 10)} type={e.type} value={e.value} method={e.name} setter={setMeasurements} id={e.id} key={prev.length}/>]
+                    else return prev
+                })
+            })
+        }
+    }
     
     if ( loading ) return <Loader />
 
@@ -54,12 +99,17 @@ const Measurements: React.FC = ()=> {
                     </div>
                 </nav>
                 {element}
+                <div className="filter">
+                    <h3>Filter:</h3>
+                    <select onChange={filterElements}>
+                        {options}
+                    </select>
+                </div>
                 <div className="measurements-list">
                     <div className="header">
                         <h3>Date</h3>
-                        <h3>Weight</h3>
-                        <h3>Waist</h3>
-                        <h3>Hips</h3>
+                        <h3>Type</h3>
+                        <h3>Value</h3>
                         <h3>Method</h3>
                         <div></div>
                     </div>

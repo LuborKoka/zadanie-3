@@ -162,15 +162,43 @@ server.get('/api/user/init/:id', async (req, res) =>{
     const { id } = req.params
     try {
         const r = await db.query(`
-            SELECT m.id, m.weight, m.date, m.waist, m.hips, m.method_id, COALESCE(me.name, 'Method not set') AS name
-            FROM merania AS m
+            SELECT m.id, m.value, m.date,  m.method_id, COALESCE(me.name, 'Method not set') AS name
+            FROM weight AS m
+            LEFT JOIN methods AS me ON m.method_id = me.id
+            WHERE userid = $1
+            ORDER BY date
+        `, [id])
+
+        const rr = await db.query(`
+            SELECT m.id, m.value, m.date,  m.method_id, COALESCE(me.name, 'Method not set') AS name
+            FROM waist AS m
+            LEFT JOIN methods AS me ON m.method_id = me.id
+            WHERE userid = $1
+            ORDER BY date
+        `, [id])
+
+        const rrr = await db.query(`
+            SELECT m.id, m.value, m.date,  m.method_id, COALESCE(me.name, 'Method not set') AS name
+            FROM hips AS m
             LEFT JOIN methods AS me ON m.method_id = me.id
             WHERE userid = $1
             ORDER BY date
         `, [id])
 
         response.message = 'Success'
+        r.rows.forEach(r => {
+            r.type = 'Weight'
+        })
         response.data = r.rows
+        rr.rows.forEach(r => {
+            r.type = 'Waist'
+            response.data.push(r)
+        })
+
+        rrr.rows.forEach( r => {
+            r.type = 'Hips'
+            response.data.push(r)
+        })
         
         res.status(200).send(JSON.stringify(response)).end()
 
@@ -209,21 +237,20 @@ server.get('/api/user/add/:id', async (req, res) => {
 
  server.put('/api/user/measurements', async(req, res) => {
     const userID = req.body.params.userID
-    const weight = req.body.params.weight
+    const value = req.body.params.value
     const date = req.body.params.date
-    const waist = req.body.params.waist
-    const hips = req.body.params.hips
     const method = req.body.params.method
+    const type = req.body.params.type
 
     
     const response = {}
 
     try {
         const r = await db.query(`
-            INSERT INTO merania (userID, weight, date, waist, hips, method_id)
-            VALUES ($1, $2, $3, $4, $5, $6)
+            INSERT INTO ${type} (userID, value, date, method_id)
+            VALUES ($1, $2, $3, $4)
             RETURNING id
-        `, [userID, weight, date, waist, hips, method])
+        `, [userID, value, date, method])
         
         const rr = await db.query(`
             SELECT name
@@ -243,15 +270,16 @@ server.get('/api/user/add/:id', async (req, res) => {
     }
  })
  
- server.delete('/api/user/measurement/:userID/:id', async (req, res) => {
+ server.delete('/api/user/measurement/:userID/:id/:type', async (req, res) => {
     const { userID } = req.params
     const { id } = req.params
+    const { type } = req.params
 
     const response = {}
 
     try {
         const r = await db.query((`
-            DELETE FROM merania
+            DELETE FROM ${type}
             WHERE id = $1 AND userID = $2
         `), [id, userID])
 
@@ -273,8 +301,8 @@ server.get('/api/user/add/:id', async (req, res) => {
 
     try {
         const r = await db.query(`
-            SELECT m.date, m.weight, m.waist, m.hips, me.name
-            FROM merania AS m
+            SELECT m.date, m.weight, me.name
+            FROM weight AS m
             LEFT JOIN methods AS me ON m.method_id = me.id
             WHERE userid = $1
             ORDER BY date
@@ -282,8 +310,32 @@ server.get('/api/user/add/:id', async (req, res) => {
         var csvData = ''
         const lines = []
 
+        const rr = await db.query(`
+            SELECT m.date, m.weight, me.name
+            FROM waist AS m
+            LEFT JOIN methods AS me ON m.method_id = me.id
+            WHERE userid = $1
+            ORDER BY date
+        `, [id])
+
+        const rrr = await db.query(`
+            SELECT m.date, m.weight, me.name
+            FROM hips AS m
+            LEFT JOIN methods AS me ON m.method_id = me.id
+            WHERE userid = $1
+            ORDER BY date
+        `, [id])
+
         r.rows.forEach(r => {
-            lines.push([r.date, r.weight, r.waist, r.hips, r.name])
+            lines.push([r.date, r.weight, r.name])
+        })
+
+        rr.rows.forEach(r => {
+            lines.push([r.date, r.weight, r.name])
+        })
+        
+        rrr.rows.forEach(r => {
+            lines.push([r.date, r.weight, r.name])
         })
 
         lines.forEach( (e, index) => {
@@ -446,7 +498,13 @@ server.delete('/api/admin/delete/:id', async (req, res) => {
             FROM users 
             WHERE id = ${id};
             DELETE 
-            FROM merania
+            FROM weight
+            WHERE userid = ${id};
+            DELETE 
+            FROM waist
+            WHERE userid = ${id};
+            DELETE
+            FROM hips
             WHERE userid = ${id};
             DELETE
             FROM methods
