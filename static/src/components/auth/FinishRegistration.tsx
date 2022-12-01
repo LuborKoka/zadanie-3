@@ -72,7 +72,7 @@ const FinishRegistration: React.FC = () => {
                             <label htmlFor='Weight'><span>Weight(kg)</span></label>
                         </div>
                         <div className='center'>
-                            <button onClick={handleClick}>LOGIN</button>
+                            <button onClick={handleClick}>FINISH REGISTRATION</button>
                         </div>
                     </form>
                 </div>

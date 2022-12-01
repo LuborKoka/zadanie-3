@@ -54,10 +54,7 @@ const Input: React.FC<props> = ({ setMeasurements })=> {
             setErrorTxt('Create a method')
             return
         }
-                
-        const len = (i: string):number => {
-            return i.toString().length
-        }
+
 
         axios
             .put('http://localhost:8080/api/user/measurements', {

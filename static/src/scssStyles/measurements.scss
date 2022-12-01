@@ -169,4 +169,27 @@
         }
     }
     
+    .import-measurements {
+        padding: 3vh 0;
+        display: flex;
+        align-items: center;
+        row-gap: 2rem;
+        flex-direction: column;
+        button {
+            background-color: rgb(16, 16, 155);
+            cursor: pointer;
+            border-radius: 3px;
+            outline: none;
+            border: none;
+            transition: all .2s;
+            color: white;
+            padding: .25rem .5rem;
+            font-size: 1.2rem;
+            min-width: 200px;
+
+            &:hover {
+                opacity: .8;
+            }
+        }
+    }
 }

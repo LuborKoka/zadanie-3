@@ -97,12 +97,13 @@ const AdminUI: React.FC = () => {
         setCsv(input.current.files[0])
     }
 
-    //submit csv file
+    //submit csv file and import users
     const submit = (e: React.FormEvent<EventTarget>): void => {
         e.preventDefault()
         if ( input.current !== null && input.current.files?.length === 0 ) {
             setError(true)
             setErrorTxt('Select a file')
+            return
         }
 
         const data = new FormData()
@@ -110,7 +111,6 @@ const AdminUI: React.FC = () => {
         data.append('name', csv.name)
         data.append('file', csv)
 
-        
         axios({
             method: 'POST',
             url: 'http://localhost:8080/api/admin/import',
@@ -121,7 +121,6 @@ const AdminUI: React.FC = () => {
         })
         .then((res: AxiosResponse) => {
             const data: users[] = res.data.users
-            setElements([])
 
             data.forEach((d: users) => {
                 setElements((prev: JSX.Element[]) => {

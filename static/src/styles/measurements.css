@@ -147,5 +147,27 @@
 .measurements-container .e-i-wrapper i:hover {
   color: rgb(16, 16, 155);
 }
+.measurements-container .import-measurements {
+  padding: 3vh 0;
+  display: flex;
+  align-items: center;
+  row-gap: 2rem;
+  flex-direction: column;
+}
+.measurements-container .import-measurements button {
+  background-color: rgb(16, 16, 155);
+  cursor: pointer;
+  border-radius: 3px;
+  outline: none;
+  border: none;
+  transition: all 0.2s;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  font-size: 1.2rem;
+  min-width: 200px;
+}
+.measurements-container .import-measurements button:hover {
+  opacity: 0.8;
+}
 
 /*# sourceMappingURL=measurements.css.map */

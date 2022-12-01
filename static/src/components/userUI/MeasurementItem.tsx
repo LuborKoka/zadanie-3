@@ -8,7 +8,8 @@ interface props {
     value?: string,
     setter: React.Dispatch<React.SetStateAction<JSX.Element[]>>
     id: number,
-    method?: string
+    method?: string,
+    method_id?: number
 }
 
 interface response {
@@ -17,7 +18,7 @@ interface response {
 }
 
 
-const MeasurementItem: React.FC<props> = ({ date, type, value, setter, id, method })=> {
+const MeasurementItem: React.FC<props> = ({ date, type, value, setter, id, method, method_id })=> {
     const session: contextInterface | null = useContext(context)
 
     function deleteMeasurement():void {
@@ -42,7 +43,7 @@ const MeasurementItem: React.FC<props> = ({ date, type, value, setter, id, metho
             <p>{date}</p>
             <p>{type}</p>
             <p>{value}</p>
-            <p>{method}</p>
+            <p>{`${method === undefined ? '' : method}  id=${method_id}`}</p>
             <div className="delete">
                 <i className="fas fa-trash-alt" onClick={deleteMeasurement}/>
             </div>

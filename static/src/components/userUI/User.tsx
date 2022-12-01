@@ -4,6 +4,7 @@ import Add from "./Add";
 import '../../styles/user.css'
 import Measurements from "./Measurements";
 import Methods from "./Methods";
+import Graph from "./Graph";
 
 
 
@@ -23,6 +24,10 @@ const User:React.FC = () => {
                     <div className="link" onClick={()=> {setElement(<Methods />); setActive('methods')}}>
                         <h2>Methods</h2>
                         <div className={active === 'methods' ? 'active' : ''}></div>
+                    </div>
+                    <div className="link" onClick={()=> {setElement(<Graph />); setActive('graph')}}>
+                        <h2>Graph</h2>
+                        <div className={active === 'graph' ? 'active' : ''}></div>
                     </div>
                 </nav>
                 {element}

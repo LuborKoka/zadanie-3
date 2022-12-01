@@ -162,7 +162,7 @@ server.get('/api/user/init/:id', async (req, res) =>{
     const { id } = req.params
     try {
         const r = await db.query(`
-            SELECT m.id, m.value, m.date,  m.method_id, COALESCE(me.name, 'Method not set') AS name
+            SELECT m.id, m.value, m.date,  m.method_id, COALESCE(me.name, 'Method name not set') AS name
             FROM weight AS m
             LEFT JOIN methods AS me ON m.method_id = me.id
             WHERE userid = $1
@@ -170,7 +170,7 @@ server.get('/api/user/init/:id', async (req, res) =>{
         `, [id])
 
         const rr = await db.query(`
-            SELECT m.id, m.value, m.date,  m.method_id, COALESCE(me.name, 'Method not set') AS name
+            SELECT m.id, m.value, m.date,  m.method_id, COALESCE(me.name, 'Method name not set') AS name
             FROM waist AS m
             LEFT JOIN methods AS me ON m.method_id = me.id
             WHERE userid = $1
@@ -178,7 +178,7 @@ server.get('/api/user/init/:id', async (req, res) =>{
         `, [id])
 
         const rrr = await db.query(`
-            SELECT m.id, m.value, m.date,  m.method_id, COALESCE(me.name, 'Method not set') AS name
+            SELECT m.id, m.value, m.date,  m.method_id, COALESCE(me.name, 'Method name not set') AS name
             FROM hips AS m
             LEFT JOIN methods AS me ON m.method_id = me.id
             WHERE userid = $1
@@ -301,7 +301,7 @@ server.get('/api/user/add/:id', async (req, res) => {
 
     try {
         const r = await db.query(`
-            SELECT m.date, m.weight, me.name
+            SELECT m.date, m.value, me.name
             FROM weight AS m
             LEFT JOIN methods AS me ON m.method_id = me.id
             WHERE userid = $1
@@ -311,7 +311,7 @@ server.get('/api/user/add/:id', async (req, res) => {
         const lines = []
 
         const rr = await db.query(`
-            SELECT m.date, m.weight, me.name
+            SELECT m.date, m.value, me.name
             FROM waist AS m
             LEFT JOIN methods AS me ON m.method_id = me.id
             WHERE userid = $1
@@ -319,7 +319,7 @@ server.get('/api/user/add/:id', async (req, res) => {
         `, [id])
 
         const rrr = await db.query(`
-            SELECT m.date, m.weight, me.name
+            SELECT m.date, m.value, me.name
             FROM hips AS m
             LEFT JOIN methods AS me ON m.method_id = me.id
             WHERE userid = $1
@@ -327,15 +327,15 @@ server.get('/api/user/add/:id', async (req, res) => {
         `, [id])
 
         r.rows.forEach(r => {
-            lines.push([r.date, r.weight, r.name])
+            lines.push([r.date, 'Weight', r.value, r.name])
         })
 
         rr.rows.forEach(r => {
-            lines.push([r.date, r.weight, r.name])
+            lines.push([r.date, 'Waist', r.value, r.name])
         })
         
         rrr.rows.forEach(r => {
-            lines.push([r.date, r.weight, r.name])
+            lines.push([r.date, 'Hips', r.value, r.name])
         })
 
         lines.forEach( (e, index) => {
@@ -349,6 +349,7 @@ server.get('/api/user/add/:id', async (req, res) => {
         res.status(200).send(csvData).end()
     } catch(e) {
         console.log(e)
+        res.status(500).end()
         
     }
  })
@@ -425,6 +426,148 @@ server.get('/api/user/add/:id', async (req, res) => {
 
         res.status(500).end()
     }
+ })
+
+
+ server.post('/api/user/import/:userID', upload.single('file'), async (req, res) => {
+    const response = {}
+    const { userID } = req.params
+    const file = req.file
+    const data = fs.readFileSync(file.path)
+    const weight = []
+    const waist = []
+    const hips = []
+    response.data = []
+
+    
+
+    
+
+    parse(data, (err, records) => {
+        if (err) {
+          console.error(err)
+          res.status(400).json({success: false, message: 'An error occurred'})
+        }
+
+        records.forEach( r => {
+            const d = r[0].split(';')
+            const info = {}
+            info.date = d[0]
+            info.type = d[2].toLowerCase()
+            info.value = d[1]
+            info.method = d[3]
+
+            switch(info.type) {
+                case 'weight':
+                    weight.push(info)
+                    break
+                case 'waist':
+                    waist.push(info)
+                    break
+                case 'hips':
+                    hips.push(info)
+            }
+        })
+      })
+    const sleep = ms => new Promise(r => setTimeout(r, ms))
+    await sleep(1000)
+    
+    
+
+    if ( weight.length !== 0 ) {
+        let queryWeight = ''
+        weight.forEach((w, i) => {
+            queryWeight = queryWeight.concat(`('${w.date}', ${w.value}, ${w.method}, ${userID})`)
+            if ( i + 1 < weight.length ) queryWeight = queryWeight.concat(',')
+        })
+
+        try {
+
+            const r = await db.query(`
+                INSERT INTO weight(date, value, method_id, userid)
+                VALUES ${queryWeight}
+                RETURNING id, method_id
+            `)
+
+            r.rows.forEach((r, i) => {
+                weight[i].id = r.id
+                weight[i].methodID = r.method_id
+                response.data.push(weight[i])
+            })
+            response.weight = true
+            
+            } catch (e) {
+            console.log(e)
+            response.weight = false
+            response.waist = false
+            response.hips = false
+            return res.status(400).send(JSON.stringify(response)).end()
+        }
+    } 
+
+    let queryWaist = ''
+
+    if ( waist.length !== 0 ) {
+        waist.forEach((w, i) => {
+            queryWaist = queryWaist.concat(`('${w.date}', ${w.value}, ${w.method}, ${userID})`)
+            if ( i + 1 < waist.length ) queryWaist = queryWaist.concat(',')
+        })
+
+        try {
+
+            const r = await db.query(`
+                INSERT INTO waist(date, value, method_id, userid)
+                VALUES ${queryWaist}
+                RETURNING id, method_id
+            `)
+
+            r.rows.forEach((r, i) => {
+                waist[i].id = r.id
+                waist[i].methodID = r.method_id
+                response.data.push(waist[i])
+            })
+
+            response.waist = true
+            
+            } catch (e) {
+            response.waist = false
+            response.hips = false
+            return res.status(400).send(JSON.stringify(response)).end()
+        }
+    } 
+
+    let queryHips = ''
+
+    if ( hips.length !== 0 ) {
+        hips.forEach((w, i) => {
+            queryHips = queryHips.concat(`('${w.date}', ${w.value}, ${w.method}, ${userID})`)
+            if ( i + 1 < hips.length ) queryHips = queryHips.concat(',')
+        })
+
+        try {
+
+            const r = await db.query(`
+                INSERT INTO hips(date, value, method_id, userid)
+                VALUES ${queryHips}
+                RETURNING id, method_id
+            `)
+
+            r.rows.forEach((r, i) => {
+                hips[i].id = r.id
+                hips[i].methodID = r.method_id
+                response.data.push(hips[i])
+            })
+
+            response.hips = true
+            
+            } catch (e) {
+            response.hips = false
+            return res.status(400).send(JSON.stringify(response)).end()
+        }
+    } 
+    
+    res.status(200).send(JSON.stringify(response)).end()
+
  })
 
  server.get('/api/admin/init', async (req, res) => {

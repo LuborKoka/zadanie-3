@@ -13,7 +13,8 @@ interface dataType {
     date: string,
     value: string,
     name: string,
-    type: string
+    type: string,
+    method_id: number
 }
 
 interface options {
@@ -39,7 +40,7 @@ const Measurements: React.FC = ()=> {
             let d: dataType[] = data.data
             d.forEach( (e: dataType) => {
                 setMeasurements( ( prev: JSX.Element[] ) => {
-                    return [...prev, <MeasurementItem date={e.date.slice(0, 10)} type={e.type} value={e.value} method={e.name} setter={setMeasurements} id={e.id} key={prev.length}/>]
+                    return [...prev, <MeasurementItem date={e.date.slice(0, 10)} type={e.type} method_id={e.method_id} value={e.value} method={e.name} setter={setMeasurements} id={e.id} key={prev.length}/>]
                 })
             })
         }
@@ -58,6 +59,7 @@ const Measurements: React.FC = ()=> {
                     })
                 })
             })
+            // eslint-disable-next-line
     }, [])
 
     const filterElements = (ev: React.ChangeEvent<HTMLSelectElement>):void => {
@@ -66,7 +68,7 @@ const Measurements: React.FC = ()=> {
             setMeasurements((p: JSX.Element[]) => {return []}) 
             d.forEach( (e: dataType) => {
                 setMeasurements( ( prev: JSX.Element[] ) => {
-                    return [...prev, <MeasurementItem date={e.date.slice(0, 10)} type={e.type} value={e.value} method={e.name} setter={setMeasurements} id={e.id} key={prev.length}/>]
+                    return [...prev, <MeasurementItem date={e.date.slice(0, 10)} type={e.type} method_id={e.method_id} value={e.value} method={e.name} setter={setMeasurements} id={e.id} key={prev.length}/>]
                     
                 })
             })
@@ -76,7 +78,7 @@ const Measurements: React.FC = ()=> {
             setMeasurements((p: JSX.Element[]) => {return []}) 
             d.forEach( (e: dataType) => {
                 setMeasurements( ( prev: JSX.Element[] ) => {
-                    if ( ev.target.value === e.name ) return [...prev, <MeasurementItem date={e.date.slice(0, 10)} type={e.type} value={e.value} method={e.name} setter={setMeasurements} id={e.id} key={prev.length}/>]
+                    if ( ev.target.value === e.name ) return [...prev, <MeasurementItem date={e.date.slice(0, 10)} method_id={e.method_id} type={e.type} value={e.value} method={e.name} setter={setMeasurements} id={e.id} key={prev.length}/>]
                     else return prev
                 })
             })
@@ -95,7 +97,7 @@ const Measurements: React.FC = ()=> {
                         <p className={ active ? 'active' : undefined} onClick={ ()=>{ setElement(<Input setMeasurements={setMeasurements}/>); setActive(true) }}>INPUT</p>
                     </div>
                     <div>
-                        <p className={ active ? undefined : 'active'} onClick= { ()=> {setElement(<Import  />); setActive(false) }}>IMPORT</p>
+                        <p className={ active ? undefined : 'active'} onClick= { ()=> {setElement(<Import setMeasurements={setMeasurements} />); setActive(false) }}>IMPORT</p>
                     </div>
                 </nav>
                 {element}
