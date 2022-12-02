@@ -32,7 +32,7 @@ const Input: React.FC<props> = ({ setMeasurements })=> {
 
     const {setError, setErrorTxt, ErrorMessage } = useErrorMessage()
     
-    const { data } = useFetch(`http://localhost:8080/api/user/method/init`)
+    const { data } = useFetch(`http://localhost:8080/api/user/init/method/${session?.userID}`)
 
     const submit = ( e: React.FormEvent<EventTarget> ): void => {
         e.preventDefault()

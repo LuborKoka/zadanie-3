@@ -47,10 +47,9 @@ const Measurements: React.FC = ()=> {
     }, [data])
 
 
-    // options for filter
     useEffect(()=> {
         axios
-            .get(`http://localhost:8080/api/user/method/init`)
+            .get(`http://localhost:8080/api/user/init/method/${session?.userID}`)
             .then((e: AxiosResponse) => {
                 setOptions([<option value={'None'}>None</option>])
                 const d: {message: string, data: options[]} = e.data

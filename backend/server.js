@@ -13,7 +13,6 @@ const fs = require('fs')
 server.use(cors())
 server.use(express.json({extended: false}))
 server.use(bodyparser.json())
-//server.use(express.static('build'))
 
 var activeSessions = []
 
@@ -166,7 +165,7 @@ server.get('/api/user/init/:id', async (req, res) =>{
             SELECT m.id, m.value, m.date,  m.method_id, COALESCE(me.name, 'Method name not set') AS name
             FROM weight AS m
             LEFT JOIN methods AS me ON m.method_id = me.id
-            WHERE m.userid = $1
+            WHERE userid = $1
             ORDER BY date
         `, [id])
 
@@ -174,7 +173,7 @@ server.get('/api/user/init/:id', async (req, res) =>{
             SELECT m.id, m.value, m.date,  m.method_id, COALESCE(me.name, 'Method name not set') AS name
             FROM waist AS m
             LEFT JOIN methods AS me ON m.method_id = me.id
-            WHERE m.userid = $1
+            WHERE userid = $1
             ORDER BY date
         `, [id])
 
@@ -182,7 +181,7 @@ server.get('/api/user/init/:id', async (req, res) =>{
             SELECT m.id, m.value, m.date,  m.method_id, COALESCE(me.name, 'Method name not set') AS name
             FROM hips AS m
             LEFT JOIN methods AS me ON m.method_id = me.id
-            WHERE m.userid = $1
+            WHERE userid = $1
             ORDER BY date
         `, [id])
 
@@ -328,15 +327,15 @@ server.get('/api/user/add/:id', async (req, res) => {
         `, [id])
 
         r.rows.forEach(r => {
-            lines.push([r.date, r.value, 'Weight', r.name])
+            lines.push([r.date, 'Weight', r.value, r.name])
         })
 
         rr.rows.forEach(r => {
-            lines.push([r.date, r.value,  'Waist', r.name])
+            lines.push([r.date, 'Waist', r.value, r.name])
         })
         
         rrr.rows.forEach(r => {
-            lines.push([r.date, r.value, 'Hips', r.name])
+            lines.push([r.date, 'Hips', r.value, r.name])
         })
 
         lines.forEach( (e, index) => {
@@ -355,15 +354,18 @@ server.get('/api/user/add/:id', async (req, res) => {
     }
  })
 
- server.get('/api/user/method/init', async (req, res) => {
+ server.get('/api/user/init/method/:id', async (req, res) => {
+    const { id } = req.params
+
     const response = {}
 
     try {
         const r = await db.query(`
             SELECT id, name, description
             FROM methods 
+            WHERE user_id = $1
             ORDER BY id
-        `)
+        `, [id])
 
         response.message = 'Success'
         response.data = r.rows
@@ -372,6 +374,7 @@ server.get('/api/user/add/:id', async (req, res) => {
 
     } catch (e) {
         console.log(e)
+
         res.status(500).end()
     }
  })
@@ -384,11 +387,11 @@ server.get('/api/user/add/:id', async (req, res) => {
 
     try {
         const r = await db.query(`
-            INSERT INTO methods(id, name, description)
-            SELECT COALESCE(MAX(id), 0) + 1, $1, $2
+            INSERT INTO methods(id, name, description, user_id)
+            SELECT COALESCE(MAX(id), 0) + 1, $1, $2, $3
             FROM methods
             RETURNING id
-    `, [name, description])
+    `, [name, description, userID])
 
         response.message = 'Success'
         response.id = r.rows[0].id
@@ -402,8 +405,9 @@ server.get('/api/user/add/:id', async (req, res) => {
     }
  })
 
- server.delete('/api/user/delete/method/:id', async(req, res) => {
+ server.delete('/api/user/delete/method/:id/:userID', async(req, res) => {
     const { id } = req.params
+    const { userID } = req.params
 
     const response = {}
 
@@ -411,8 +415,8 @@ server.get('/api/user/add/:id', async (req, res) => {
         const r = await db.query(`
             DELETE 
             FROM methods
-            WHERE id = $1
-        `, [id])
+            WHERE id = $1 AND user_id = $2
+        `, [id, userID])
 
         response.message = 'Success'
 
@@ -645,6 +649,9 @@ server.delete('/api/admin/delete/:id', async (req, res) => {
             DELETE
             FROM hips
             WHERE userid = ${id};
+            DELETE
+            FROM methods
+            WHERE user_id = ${id}
         `)        
         res.status(200).send({'message': 'Success'}).end()
 

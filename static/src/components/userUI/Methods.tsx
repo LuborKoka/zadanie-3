@@ -19,7 +19,7 @@ const Methods: React.FC = () => {
 
     const { setError, setErrorTxt, ErrorMessage } = useErrorMessage()
 
-    const { data } = useFetch(`http://localhost:8080/api/user/method/init`)
+    const { data } = useFetch(`http://localhost:8080/api/user/init/method/${session?.userID}`)
     
     const name = useRef<HTMLInputElement>(null)
     const desc = useRef<HTMLInputElement>(null)
