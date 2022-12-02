@@ -21,7 +21,7 @@ interface resType {
 
 const UserItem: React.FC<Props> = ({ name, email, age, height, weight, id, setError, setErrorTxt, setElements }) => {
 
-    const handleClick = (e: React.FormEvent<EventTarget>): void => {
+    const handleDelete = (e: React.FormEvent<EventTarget>): void => {
         e.preventDefault()
 
         axios   
@@ -57,7 +57,7 @@ const UserItem: React.FC<Props> = ({ name, email, age, height, weight, id, setEr
 
 
                 <div className="center">
-                    <button onClick={handleClick}>Delete User</button>
+                    <button onClick={handleDelete}>Delete User</button>
                 </div>
             </div>
         </React.Fragment>

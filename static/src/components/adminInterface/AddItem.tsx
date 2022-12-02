@@ -16,6 +16,7 @@ const AddItem: React.FC<props> = ({ id, text, count}) => {
 
     const [active, setActive] = useState<boolean>(false)
 
+    //styling, not important
     useEffect(()=> {
         if ( adds === null ) return
         if ( adds.addID === id ) setActive(true)
@@ -23,6 +24,7 @@ const AddItem: React.FC<props> = ({ id, text, count}) => {
 
     }, [adds, id])
 
+    //set active add id
     const setAdd = ():void => {
         if ( session === null || adds === null ) return
         session.addID = id

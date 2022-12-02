@@ -9,7 +9,7 @@ interface dataTypes {
 
 const Add: React.FC = () => {
     const time = useRef<number>(0)
-    const [active, setActive] = useState<boolean>(false)
+    const [active, setActive] = useState<boolean>(false)            //show/hide popup
 
     const [addData, setAddData] = useState<string[]>(['', ''])      //[link, image]
 
@@ -24,7 +24,7 @@ const Add: React.FC = () => {
         } 
     }, [time])
 
-    const incrAdd = ():void => {
+    const incrAddCount = ():void => {
         axios
             .patch(`http://localhost:8080/api/adds/inc/${session?.addID}`)
             .catch( ( e: AxiosError ) => {
@@ -69,7 +69,7 @@ const Add: React.FC = () => {
                     </div>
                 </div>
                 <div className="add-image">
-                    <a target='_blank' href={`${addData[0]}`} rel='noreferrer' onClick={incrAdd} >
+                    <a target='_blank' href={`${addData[0]}`} rel='noreferrer' onClick={incrAddCount} >
                         <img alt='add_img' src={addData[1]} />
                     </a>
                 </div>

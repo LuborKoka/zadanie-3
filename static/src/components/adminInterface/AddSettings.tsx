@@ -22,8 +22,8 @@ export const addContext = createContext<addTypes | null>(null)
 
 
 const AddSettings: React.FC = () => {
-    const [active, setActive] = useState<boolean>(false)
-    const [addElements, setAddElements] = useState<JSX.Element[]>([])
+    const [active, setActive] = useState<boolean>(false)    //style
+    const [addElements, setAddElements] = useState<JSX.Element[]>([])   //list of adds
 
     const session: contextInterface | null = useContext(context)
     const [addID, setAddID] = useState<number | undefined>(session?.addID)
@@ -37,6 +37,7 @@ const AddSettings: React.FC = () => {
         setActive(!active)
     }
 
+    //get all available adds from db
     useEffect(()=> {
         axios   
             .get<dataTypes>('http://localhost:8080/api/admin/adds')
@@ -53,7 +54,7 @@ const AddSettings: React.FC = () => {
     return(
         <React.Fragment>
             <addContext.Provider value={adds}>
-                <div className={active ? "add-settings-container active" : "add-settings-container"}>
+                <div className={active ? "add-settings-container active" : "add-settings-container"} style={active ? {boxShadow: '0 0 15px 2px rgba(16, 16, 155, .3)'} : {}}>
                     <div className={active ? "expand exp-active" : "expand"} onClick={open}>
                         <i className="fa-solid fa-chevron-left" />
                     </div>

@@ -30,7 +30,6 @@ const Admin: React.FC = () => {
         e.preventDefault()
 
         if ( password.current == null ) return
-        if ( password.current.value === '' ) return
 
         
         axios  

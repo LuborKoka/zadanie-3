@@ -31,15 +31,17 @@ const AdminUI: React.FC = () => {
     // eslit-disable-next-line
     const {data, loading} = useFetch('http://localhost:8080/api/admin/init')
 
-    const [usersCount, setUsersCount] = useState<number>(0)
-    const [elements, setElements] = useState<JSX.Element[]>([])
+    const [usersCount, setUsersCount] = useState<number>(0)         //for styling
+    const [elements, setElements] = useState<JSX.Element[]>([])     //list of users
 
     const [csv, setCsv] = useState<File>()
 
-    const elDiv = useRef<HTMLDivElement>(null)
-    const bdyDiv = useRef<HTMLDivElement>(null)
-    const input = useRef<HTMLInputElement>(null)
+    const elDiv = useRef<HTMLDivElement>(null)                      //for styling
+    const bdyDiv = useRef<HTMLDivElement>(null)                     //for styling
+    const input = useRef<HTMLInputElement>(null)                    //file input
 
+
+    //all fields for adding user
     const name = useRef<HTMLInputElement>(null)
     const password = useRef<HTMLInputElement>(null)
     const confirmPassword = useRef<HTMLInputElement>(null)
@@ -139,6 +141,13 @@ const AdminUI: React.FC = () => {
         if ( password.current?.value !== confirmPassword.current?.value ) {
             setError(true)
             setErrorTxt('Passwords must match')
+            return
+        }
+
+        if ( name.current?.value === '' || age.current?.value === '' || weight.current?.value === '' || height.current?.value === ''
+        || mail.current?.value === '' || password.current?.value === '') {
+            setError(true)
+            setErrorTxt('All fields are required')
             return
         }
 

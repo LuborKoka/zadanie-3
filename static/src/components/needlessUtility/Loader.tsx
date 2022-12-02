@@ -1,14 +1,12 @@
 import React from "react"
 
-interface Props {
-    display?: string
-}
 
 
-const Loader: React.FC<Props> = ({ display = 'flex' }) => {
+
+const Loader: React.FC = () => {
     return(
         <React.Fragment>
-            <div className="loader-container" style={{ display: display}}>
+            <div className="loader-container" style={{ display: 'flex'}}>
                 <div className="loader" />
             </div>
         </React.Fragment>
