@@ -43,7 +43,7 @@ const MeasurementItem: React.FC<props> = ({ date, type, value, setter, id, metho
             <p>{date}</p>
             <p>{type}</p>
             <p>{value}</p>
-            <p>{`${method === undefined ? '' : method}  id=${method_id}`}</p>
+            <p>{`${method === undefined ? `id: ${method_id}` : method}`}</p>
             <div className="delete">
                 <i className="fas fa-trash-alt" onClick={deleteMeasurement}/>
             </div>

@@ -1,0 +1,12 @@
+#Ľubor Koka
+version: '1.0'
+
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    volumes:
+      - .:/app
+    ports:
+      - 8080:8080
+      - 8082:8082

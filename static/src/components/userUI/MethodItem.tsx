@@ -1,6 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import React, { useContext } from "react";
-import { context, contextInterface } from "../../App";
+import React from "react";
 
 
 interface props {
@@ -16,11 +15,9 @@ interface res {
 
 
 const MethodItem: React.FC<props> = ({ id, name, description, setElements }) => {
-    const session: contextInterface | null = useContext(context)
-
     const del = (): void => {
         axios
-            .delete(`http://localhost:8080/api/user/delete/method/${id}/${session?.userID}`)
+            .delete(`http://localhost:8080/api/user/delete/method/${id}`)
             .then( ( res: AxiosResponse ) => {
                 let data: res = res.data
 
