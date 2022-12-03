@@ -27,7 +27,7 @@ async function build() {
             date date
         );
 
-        CREATE SEQUENCE public.hips_id_seq
+        CREATE SEQUENCE IF NOT EXISTS public.hips_id_seq
             AS integer
             START WITH 1
             INCREMENT BY 1
@@ -60,7 +60,7 @@ async function build() {
             weight integer
         );
 
-        CREATE SEQUENCE public.users_id_seq
+        CREATE SEQUENCE IF NOT EXISTS public.users_id_seq
             AS integer
             START WITH 1
             INCREMENT BY 1
@@ -76,7 +76,7 @@ async function build() {
             date date
         );
 
-        CREATE SEQUENCE public.waist_id_seq
+        CREATE SEQUENCE IF NOT EXISTS public.waist_id_seq
             AS integer
             START WITH 1
             INCREMENT BY 1
@@ -85,6 +85,16 @@ async function build() {
             CACHE 1;
 
             ALTER TABLE ONLY public.hips ALTER COLUMN id SET DEFAULT nextval('public.hips_id_seq'::regclass);
+
+        CREATE SEQUENCE IF NOT EXISTS public.weight_id_seq
+            AS integer
+            START WITH 1
+            INCREMENT BY 1
+            NO MINVALUE
+            NO MAXVALUE
+            CACHE 1;
+
+        ALTER TABLE ONLY public.weight ALTER COLUMN id SET DEFAULT nextval('public.weight_id_seq'::regclass);
 
 
         ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
@@ -120,11 +130,11 @@ async function build() {
         INSERT INTO public.waist (id, userid, value, method_id, date) VALUES (1, 2, 75, 2, '2022-12-01');
 
         INSERT INTO public.weight (id, userid, value, date, method_id) VALUES (1, 2, 83, '2022-11-26', 1);
-        INSERT INTO public.weight (id, userid, value, date, method_id) VALUES (3, 2, 84, '2022-11-27', 1);
-        INSERT INTO public.weight (id, userid, value, date, method_id) VALUES (4, 2, 85, '2022-11-28', 1);
-        INSERT INTO public.weight (id, userid, value, date, method_id) VALUES (5, 2, 82, '2022-11-25', 1);
-        INSERT INTO public.weight (id, userid, value, date, method_id) VALUES (6, 1, 69, '2022-12-01', 6);
-        INSERT INTO public.weight (id, userid, value, date, method_id) VALUES (28, 2, 84, '2022-11-28', 3);
+        INSERT INTO public.weight (id, userid, value, date, method_id) VALUES (2, 2, 84, '2022-11-27', 1);
+        INSERT INTO public.weight (id, userid, value, date, method_id) VALUES (3, 2, 85, '2022-11-28', 1);
+        INSERT INTO public.weight (id, userid, value, date, method_id) VALUES (4, 2, 82, '2022-11-25', 1);
+        INSERT INTO public.weight (id, userid, value, date, method_id) VALUES (5, 1, 69, '2022-12-01', 6);
+        INSERT INTO public.weight (id, userid, value, date, method_id) VALUES (6, 2, 84, '2022-11-28', 3);
 
         SELECT pg_catalog.setval('public.hips_id_seq', 10, true);
 
