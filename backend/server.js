@@ -9,7 +9,7 @@ const multer = require('multer')
 const os = require('os')
 const upload = multer({ dest: os.tmpdir() })
 const fs = require('fs')
-const build = require('./build')
+const build = require('./buildDB')
 
 //ocenim navod, ako spravit tie tabulky s pouzitim sql dump, lebo to bolo evidentne nad moje sily
 build()
