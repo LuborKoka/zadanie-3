@@ -87,15 +87,10 @@ async function build() {
             ALTER TABLE ONLY public.hips ALTER COLUMN id SET DEFAULT nextval('public.hips_id_seq'::regclass);
 
 
-        ALTER TABLE ONLY public.metody ALTER COLUMN id SET DEFAULT nextval('public.metody_id_seq'::regclass);
-
-
         ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
 
 
         ALTER TABLE ONLY public.waist ALTER COLUMN id SET DEFAULT nextval('public.waist_id_seq'::regclass);
-
-        ALTER TABLE ONLY public.weight ALTER COLUMN id SET DEFAULT nextval('public.merania_id_seq'::regclass);
 
         INSERT INTO public.add (id, image, link, count, text) VALUES (4, 'https://img.icons8.com/officel/160/null/react.png', 'https://icons8.com/icon/wPohyHO_qO1a/react', 0, 'React icon by Icons8');
         INSERT INTO public.add (id, image, link, count, text) VALUES (1, 'https://img.icons8.com/nolan/96/tank.png', 'https://icons8.com/icon/HjAC7fEt0292/tank', 0, 'Tank icon by Icons8');
@@ -133,10 +128,6 @@ async function build() {
 
         SELECT pg_catalog.setval('public.hips_id_seq', 10, true);
 
-        SELECT pg_catalog.setval('public.merania_id_seq', 82, true);
-
-        SELECT pg_catalog.setval('public.metody_id_seq', 1, false);
-
         SELECT pg_catalog.setval('public.users_id_seq', 65, true);
 
         SELECT pg_catalog.setval('public.waist_id_seq', 11, true);
@@ -153,9 +144,6 @@ async function build() {
 
         ALTER TABLE ONLY public.methods
             ADD CONSTRAINT methods_pkey PRIMARY KEY (id);
-
-        ALTER TABLE ONLY public.metody
-            ADD CONSTRAINT metody_pkey PRIMARY KEY (id);
 
         ALTER TABLE ONLY public.users
             ADD CONSTRAINT users_email_key UNIQUE (email);

@@ -11,6 +11,7 @@ const upload = multer({ dest: os.tmpdir() })
 const fs = require('fs')
 const build = require('./build')
 
+//ocenim navod, ako spravit tie tabulky s pouzitim sql dump, lebo to bolo evidentne nad moje sily
 build()
 
 server.use(cors())
@@ -168,7 +169,7 @@ server.get('/api/user/init/:id', async (req, res) =>{
         const r = await db.query(`
             SELECT m.id, m.value, m.date,  m.method_id, COALESCE(me.name, 'Method name not set') AS name
             FROM weight AS m
-            LEFT JOIN methods AS me ON m.method_id = me.id
+            LEFT JOIN methods AS me ON m.method_id = me.id AND me.user_id = $1
             WHERE userid = $1
             ORDER BY date
         `, [id])
