@@ -170,36 +170,15 @@ async function build() {
         `)*/
 
         const r = await db.query(`
-        --
-        -- PostgreSQL database dump
-        --
-        
-        -- Dumped from database version 14.2
-        -- Dumped by pg_dump version 14.2
-        
-        -- Started on 2022-12-03 19:49:54
-        
-        SET statement_timeout = 0;
-        SET lock_timeout = 0;
-        SET idle_in_transaction_session_timeout = 0;
-        SET client_encoding = 'UTF8';
-        SET standard_conforming_strings = on;
-        SELECT pg_catalog.set_config('search_path', '', false);
-        SET check_function_bodies = false;
-        SET xmloption = content;
-        SET client_min_messages = warning;
-        SET row_security = off;
-        
-        SET default_tablespace = '';
-        
-        SET default_table_access_method = heap;
-        
-        --
-        -- TOC entry 209 (class 1259 OID 25985)
-        -- Name: add; Type: TABLE; Schema: public; Owner: postgres
-        --
-        
-        CREATE TABLE public.add (
+
+        DROP TABLE IF EXISTS public.add;
+        DROP TABLE IF EXISTS public.hips;
+        DROP TABLE IF EXISTS public.weight;
+        DROP TABLE IF EXISTS public.methods;
+        DROP TABLE IF EXISTS public.users;
+        DROP TABLE IF EXISTS public.waist;
+
+        CREATE TABLE  public.add (
             id integer NOT NULL,
             image text,
             link text,
@@ -231,7 +210,7 @@ async function build() {
         -- Name: hips_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
         --
         
-        CREATE SEQUENCE public.hips_id_seq
+        CREATE SEQUENCE IF NOT EXISTS public.hips_id_seq
             AS integer
             START WITH 1
             INCREMENT BY 1
@@ -247,7 +226,7 @@ async function build() {
         -- Name: hips_id_seq1; Type: SEQUENCE; Schema: public; Owner: postgres
         --
         
-        CREATE SEQUENCE public.hips_id_seq1
+        CREATE SEQUENCE IF NOT EXISTS public.hips_id_seq1
             AS integer
             START WITH 1
             INCREMENT BY 1
@@ -287,7 +266,7 @@ async function build() {
         -- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
         --
         
-        CREATE SEQUENCE public.users_id_seq
+        CREATE SEQUENCE IF NOT EXISTS public.users_id_seq
             AS integer
             START WITH 1
             INCREMENT BY 1
@@ -337,7 +316,7 @@ async function build() {
         -- Name: waist_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
         --
         
-        CREATE SEQUENCE public.waist_id_seq
+        CREATE SEQUENCE IF NOT EXISTS public.waist_id_seq
             AS integer
             START WITH 1
             INCREMENT BY 1
@@ -353,7 +332,7 @@ async function build() {
         -- Name: waist_id_seq1; Type: SEQUENCE; Schema: public; Owner: postgres
         --
         
-        CREATE SEQUENCE public.waist_id_seq1
+        CREATE SEQUENCE IF NOT EXISTS public.waist_id_seq1
             AS integer
             START WITH 1
             INCREMENT BY 1
@@ -394,7 +373,7 @@ async function build() {
         -- Name: weight_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
         --
         
-        CREATE SEQUENCE public.weight_id_seq
+        CREATE SEQUENCE IF NOT EXISTS public.weight_id_seq
             AS integer
             START WITH 1
             INCREMENT BY 1
