@@ -148,7 +148,7 @@
 }
 
 .add-settings-container {
-  position: absolute;
+  position: fixed;
   top: 40vh;
   right: 15px;
   width: 250px;
