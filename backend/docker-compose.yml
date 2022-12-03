@@ -1,12 +1,21 @@
 #Ľubor Koka
-version: '1.0'
+version: '3.7'
 
 services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: VAVJS
+    ports:
+      - '5432:5432'
   app:
     build: .
     restart: unless-stopped
+    depends_on:
+      - db
     volumes:
       - .:/app
     ports:
       - 8080:8080
-      - 8082:8082

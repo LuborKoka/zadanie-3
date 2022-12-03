@@ -9,10 +9,14 @@ const multer = require('multer')
 const os = require('os')
 const upload = multer({ dest: os.tmpdir() })
 const fs = require('fs')
+const build = require('./build')
+
+build()
 
 server.use(cors())
 server.use(express.json({extended: false}))
 server.use(bodyparser.json())
+server.use(express.static('build'))
 
 var activeSessions = []
 

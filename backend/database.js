@@ -1,12 +1,12 @@
 const Pool = require("pg").Pool;
-const getenv = require("getenv");
-const password = getenv.string("PASS");
+//const getenv = require("getenv");
+//const password = getenv.string("PASS");
 
 const pool = new Pool({
     user: "postgres",
-    password: password,
+    password: 'postgres',
     database: "VAVJS",
-    host: "localhost",
+    host: "db",
     port: 5432
 })
 
