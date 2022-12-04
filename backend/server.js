@@ -30,7 +30,8 @@ server.post('/api/login', async(req, res) => {
 
     try {
         const r = await db.query(`
-            SELECT id, password, age FROM users
+            SELECT id, password, age 
+            FROM users
             WHERE name = $1 
         `, [name])
         if ( r.rowCount == 0 ) {
@@ -47,11 +48,11 @@ server.post('/api/login', async(req, res) => {
                     response.sessionID = 0
                 else
                     response.sessionID = activeSessions[activeSessions.length - 1].sessionID + 1
-                res.status(200).send(JSON.stringify(response)).end()
-                activeSessions.push({
-                    sessionID: response.sessionID,
-                    userID: r.rows[0].id
-                })
+                    res.status(200).send(JSON.stringify(response)).end()
+                    activeSessions.push({
+                        sessionID: response.sessionID,
+                        userID: r.rows[0].id
+                    })
             } else {
                 response.login = false
                 response.message = 'Incorrect password'
@@ -108,11 +109,11 @@ server.post('/api/register', async (req, res) => {
             response.sessionID = 0
         else 
             response.sessionID = activeSessions[activeSessions.length - 1].sessionID + 1
-        res.status(200).send(JSON.stringify(response)).end()
-        activeSessions.push({
-            sessionID: response.sessionID,
-            userID: r.rows[0].id
-        })
+            res.status(200).send(JSON.stringify(response)).end()
+            activeSessions.push({
+                sessionID: response.sessionID,
+                userID: r.rows[0].id
+            })
     } catch(e) {
         console.log(e)
         if ( e.constraint === 'users_name_key' ) {
@@ -732,7 +733,7 @@ server.post('/api/admin/import', upload.single('file'), async(req, res) => {
         if ( index < users.length - 1 ) query = query.concat(',')
     })
 
-    //pokial je cesta, ako toto spravit cez prepared statement, rad sa ju dozviem
+    
     try {
         const r = await db.query(`
             INSERT INTO users(name, password, email, age, height, weight)

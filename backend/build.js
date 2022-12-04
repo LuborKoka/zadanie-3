@@ -4,6 +4,8 @@ const db = require('./database')
 async function build() {
     try {
 
+        await new Promise(r => setTimeout(r, 5000))
+
         const r = await db.query(`
 
         DROP TABLE IF EXISTS public.add;
