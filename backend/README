@@ -2,3 +2,4 @@
 - refresh stranky po tom, co ste sa prihlasili ako nejaky pouzivatel (alebo zaregistrovali), ju celkom dobuguje
 - zvolena reklama je ulozena na frontende a nie na serveri, takze treba ist do admina, zmenit ju a potom v userovi uz bude ina
 - pred importom merani si treba u daneho pouzivatela vytvorit metodu, pozriet si jej id a vlozit ho do csv, lebo importovat to pojde, ale naimportovane merania sa nezobrazia
+- v csv subore na import merani musi byt typ merania "weight", "waist" alebo "hips" (case insensitive)
