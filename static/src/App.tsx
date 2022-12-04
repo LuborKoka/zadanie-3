@@ -23,7 +23,7 @@ export const context = createContext<contextInterface | null>(null)
 
 const App = () => {
 
-  //will cause errors on logout after page refresh.. can be resolved by using local storage i guess
+  //will cause errors on logout after page refresh
   const userID = useRef<number>(-1)
   const sessionID = useRef<number>(-1)
   const addID = useRef<number>(1)
